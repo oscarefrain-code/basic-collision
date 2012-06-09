@@ -1,0 +1,316 @@
+%\documentclass[11pt,twoside,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\usepackage{graphicx}
+\usepackage{subfig}
+
+\usepackage{color}
+\usepackage{listings}
+\usepackage{framed}
+\lstset{
+  language=C++,
+  basicstyle=\footnotesize,
+  %frame=single,
+  %keywordstyle=\color{blue}, 
+  keywordstyle=\color[rgb]{0.627,0.126,0.941},
+  %commentstyle=\color[rgb]{0.133,0.545,0.133},
+  commentstyle=\color[rgb]{1.,0.2,0.2},
+  stringstyle=\color[rgb]{0.75,0.5,0.25},
+  identifierstyle=\ttfamily,
+  showstringspaces=false,
+  tabsize=2,
+  breaklines=true,
+  %prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+  %breakatwhitespace=false,
+  %aboveskip={1.5\baselineskip},
+  %extendedchars=true,
+}
+
+% TO CHANGE MARGINS -------------
+\setlength{\textwidth}{400pt}
+\addtolength{\hoffset}{-15pt}
+\setlength{\textheight}{670pt}
+\addtolength{\voffset}{-36pt}
+
+
+% FOR HEADER AND FOOTER  --------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+% Delete the default header and footer
+\fancyhead{}
+\fancyfoot{}
+% Customize the header and footer:
+% E:Even page, O:Odd, L:Left, C:Center, R:Right, H:Header, F:footer
+%\fancyhead[RO,RE]{\textit{Information about the Stack of Tasks}}
+%\fancyfoot[LO,LE]{\textit{Oscar E. Ramos Ponce}}
+\fancyfoot[R]{\thepage}
+% Decorative lines for header and footer
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+\title{\textbf{Basic Collision Detection Package}}
+\author{Oscar Efra\'{i}n Ramos Ponce \\
+  Humanoid Motion Group, LAAS-CNRS \\
+  Toulouse, France}
+\date{}
+
+\begin{document}
+\maketitle
+
+%\chapter{General Information on Interfaces}
+
+%====================================================================
+\section{Collision of triangles}
+%====================================================================
+
+The class called `CollisionTwoTriangles' detects the collision between two triangles and finds the collision points. If it is a single point in collision, the point will be obtained, if it is an edge, the extremes of the edge are found, and if there is some overlapping between the triangles, the extreme vertices of the overlapping are returned (the vertices constituting strictly the convex hull).
+
+\subsection*{Initialization}
+The class can be called specifying the vertices of the first triangle followed by the vertices of the second triangle in the following way: 
+  \begin{lstlisting}
+  CollisionTwoTriangles scene(T1V1, T1V2, T1V3, T2V1, T2V2, T2V3);
+  \end{lstlisting}
+where \textit{scene} is the name of the object, $Ti$ refers to the triangle $i$, and $Vj$ to its $j^{th}$ vertex (each vertex is of type double[3]). Another possibility is to initialize the object without specifying any vertex (by default the initial vertices would be the origin of coordinates, which would lead to a degenerated triangle). In this case, the specification would be given using any of the following functions:
+\begin{lstlisting}
+  scene.setVerticesAll(T1V1, T1V2, T1V3, T2V1, T2V2, T2V3);
+  scene.setVerticesT1(T1V1, T1V2, T1V3);
+  scene.setVerticesT2(T2V1, T2V2, T2V3);
+\end{lstlisting}
+which set all the vertices at once, or those corresponding to the first and second triangle sepparately. If needed, the values of the vertices can also be recovered as in the previous last two functions, replacing \textit{set} by \textit{get}.
+
+\subsection*{Computation}
+The collision detection is computed when the following function is called:
+\begin{lstlisting}
+  flag = scene.computeTTintersection();
+\end{lstlisting}
+where \textit{flag} has value $0$ if there is no collision, and value $1$ if there is a collision. If there is a collision, the resulting points in contact (in the world's frame) can be recovered from the attibute \textit{pointsTT}. The letters \textit{TT} refer to the fact that this class deals with triangle/triangle collision. In case there are many contact points, the components of the $i^{th}$ contact point, $p^i_c = (p^i_x, \ p^i_y, \ p^i_z)$ are given by
+\begin{lstlisting}
+  (scene.pointsTT[i].x, scene.pointsTT[i].y, scene.pointsTT[i].z)
+\end{lstlisting}
+Here, \textit{pointsTT} is a vector of \textit{Point3d}, where \textit{Point3d} is a structure containing the attributes $x$, $y$, $z$. 
+
+\subsection*{Printing Information}
+The information corresponding to the vertices defining the triangles, and to the collision points can be shown on the screen using the following functions:
+\begin{lstlisting}
+  scene.printTrianglesVertices()
+  scene.printTTcollisionInformation()
+\end{lstlisting}
+This functions only output information on the screen and do not return any value. Their main purpose is to debug some result.
+
+
+%====================================================================
+\section{Collision of Rectangles}
+%====================================================================
+
+The class called \textit{CollisionTwoRectangles} checks for the collision between two rectangles and returns the minimum collision points describing the collision.
+
+\subsection*{Initialization}
+ The initialization is similar to the case of the triangles. An object can be initialized specifying directly the vertices of each rectangle. However, for each rectangle, the vertices must be given sequencially, either in clockwise or in anticlockwise order. If the vertices are not sequencial, then the result is unpredictable. Thus, the initialization is:
+  \begin{lstlisting}
+  CollisionTwoRectangles scene(R1V1, R1V2, R1V3, R1V4,
+                               R2V1, R2V2, R2V3, R2V4);
+  \end{lstlisting}
+where \textit{scene} is the name of the object, and $R$ refers to the fact that the vertices are those of a Rectangle. Also, the object can be initially created without specifying the vertices (and assuming by default all the vertices at the origin, thus a degenerated triangle), and then, the vertices can be specified for both rectangles at a time, or for each rectangle sepparately. The methods used are similar to the ones used for the Triangular case, replacing \textit{T} by \textit{R} in the method's name. The vertices can be obtained in a similar way. 
+
+\subsection*{Computation}
+
+Internally, each rectangle is divided into two triangles, and the collision detection between the triangles is performed. 
+
+%% \begin{framed}
+%%   \begin{lstlisting}
+%%   for (int i=0; i<3; i++) {
+%%     V0[i]=0.0; V1[i]=0.0; V2[i]=0.0;
+%%     U0[i]=0.0; U1[i]=0.0; U2[i]=0.0;
+%%   }
+%%   \end{lstlisting}
+%% \end{framed}  
+
+
+
+
+
+%% %====================================================================
+%% \section{Description of the solver}
+%% %====================================================================
+
+%% For completeness in the description of the solver, the elements that come from SolverDynReduced will also be included. It will be assumed that the robot has $n_a$ actuated degrees of freedom ($30$ for HRP-2 N.14), and $n_d$ total degrees of freedom including the actuated ones and the $6$ corresponding to the free-floating base ($n_d=n_a + 6$). The full dynamic model is $A \ddot{q} + b + J_f^T f = S^T \tau $, where $A$ is the inertial matrix, $\ddot{q}$ the acceleration of the joint vector (including the free floating components), $J_f$ the contact points Jacobian, $f$ the forces at each contact point, $S$ the selection matrix, and $\tau$ the torques on the actuated joints.
+
+%% \subsection{Input Signals}
+%% %--------------------------------------------------------------------
+%% The following list provides the names of the signals, which can be used in python to plug or to directly assign the values. All these input signals are exactly the same as in SolverDynReduced.
+%%   \begin{itemize}
+%%     \item matrixInertia: $A \in \mathbb{R}^{n_d \times n_d}$
+%%     \item velocity: $\dot{q} \in \mathbb{R}^{n_d}$
+%%     \item dyndrift: $b \in \mathbb{R}^{n_d}$
+%%     \item posture: $q^*$
+%%     \item position: $q$
+%%     \item damping: value to be used for the lagrange multipliers test in the hierarchical solver (HCOD).
+%%     \item breakFactor: $K_v \in \mathbb{R}$ for the artificial friction ``task''.
+%%     \item inertiaSqroot
+%%     \item inertiaSqrootInv
+%%   \end{itemize}
+
+
+%% \subsection{Output Signals}
+%% %--------------------------------------------------------------------
+
+%% With respect to SolverDynReduced, the signals that have been modified are (by name): solution, freeMotionBase, driftContact, torque (added), forces and reducedForce. Since $\psi$ is not calculated in the QP (as in SoverDynReduced), its value was computed from $f$, which is now calculated in the QP, but the names of $f$ and $\psi$, forces and reducedForce respectively, were left unchanged in order to avoid confusions when using the same signals with the other solver. 
+
+%% For the following, it will be considered that there are $n_c$ rigid bodies in contact with a rigid surface, and that the $i^{th}$ rigid body in contact, presents $n_i$ contact points. It is also useful to recall that $G=J_fB$. The output signals are:
+%%   \begin{itemize}
+%%     \item solution: $[u^T \ f^T]^T$, where $u \in \mathbb{R}^{n_d-\rho\{G\}}$ and $f \in \mathbb{R}^{ (\sum_{i=1}^{n_c} 3 n_i)}$. It is obtained as result of the hierarchical QP in the stack of tasks.
+%%     \item reducedControl: vector $u \in \mathbb{R}^{n_d-\rho\{G\}}$ of the solution, corresponding to the motion part. % $V$.
+%%     \item forces: vector $f \in \mathbb{R}^{ (\sum_{i=1}^{n_c} 3 n_i)}$ of the solution, corresponding to the 3D force at each contact point.
+%%     \item forcesNormal: $f_n \in \mathbb{R}^{ (\sum_{i=1}^{n_c} n_i)}$, the normal force at each contact point.
+%%     \item acceleration: $\ddot{q} \in \mathbb{R}^{n_d}$ such that $\ddot{q} = B (Vu + \delta_c)$
+%%     \item torque: $\tau  \in \mathbb{R}^{n_a}$ such that $\tau = SB^{-T}(Vu+\delta_c) + Sb + SJ_c^T X^T f$.
+%%     \item Jc: contact jacobian for all the $n_c$ rigid bodies in contact:
+%%       \[ J_c = \begin{bmatrix} J_{c_1} \\ \vdots \\ J_{c_{n_c}}
+%%                \end{bmatrix} \in \mathbb{R}^{6n_c \times n_d}
+%%       \]
+%%     \item forceGenerator: $X \in \mathbb{R}^{(\sum_{i=1}^{n_c} 3n_i) \times (6n_c)}$ in \eqref{eq.X} such that $J_f = X J_c$. 
+%%     \item reducedForce: vector $\psi \in \mathbb{R}^{(\sum_{i=1}^{n_c} 3 n_i) -6}$ corresponding to the force part and computed from $f$ as: $\psi = K^+ f + K^+ (\bar{S}J_f^T)^+ \bar{S} ( B^{-T} (Vu+\delta_c)+ b)$.
+%%     \item freeForceBase: $K \in \mathbb{R}^{(\sum_{i=1}^{n_c} 3 n_i) \times ([\sum_{i=1}^{n_c} 3 n_i] -6)}$ which is a basis for the null space of $\bar{S}J_f^T$. In order to compute it, the QR decomposition of $J_f \bar{S}^T = XJ_c\bar{S}^T$ is computed as $XJ_c\bar{S}^T=QR=\begin{bmatrix}Q_1 & Q_2 \end{bmatrix} \begin{bmatrix} R_1 \\ 0 \end{bmatrix}$, and the desired null space is $Q_2$. Then, $K$ is obtained as
+%%       \[ K= \begin{bmatrix}Q_1 & Q_2 \end{bmatrix}
+%%             \begin{bmatrix} 0_{6 \times (\sum_{i=1}^{n_c} 3 n_i)}  \\  
+%%                             I_{  ([\sum_{i=1}^{n_c} 3 n_i] -6)  \times  ([\sum_{i=1}^{n_c} 3 n_i] -6)}
+%%             \end{bmatrix}.
+%%       \]
+%%     \item sizeActuation: number of columns of $K$, that is, $(\sum_{i=1}^{n_c} 3 n_i) -6$.
+%%     \item sizeMotion: number of columns of $V$, that is, $n_d - \rho\{G\}$.
+%%     \item sizeForceSpatial: with $n_c$ rigid bodies in contact, this value is $6n_c$, where $6$ is due to the fact that there is a wrench $\phi_i =[f_i \ \tau_i]^T \in \mathbb{R}^6$ associated with the $i^{th}$ body in contact.
+%%     \item sizeForcePoint: with $n_c$ bodies in contact, and $n_i$ contact points for the $i^{th}$ body in contact, this value is $\sum_{i=1}^{n_c} 3 n_i$, where $3$ accounts for the three dimensional coordinates of each point ($x$, $y$, $z$).
+%%     \item inertiaSqrootOut: upper triangular $B^{-1} \in \mathbb{R}^{n_d}$ such that $A = (B^{-1})^T B^{-1}$.
+%%     \item inertiaSqrootInvOut: upper triangular $B \in \mathbb{R}^{n_d}$ such that $A^{-1}=BB^T$.
+%%     \item activeForces
+%%     \item Jcdot
+%%     %% \item activeForces (Vector): TO ANALIZE
+%%     %% \item Jcdot (Matrix): NOT YET IMPLEMENTED!!!
+%%     %\item sizeConfiguration (int): number of degrees of freedom and the free flyer (size of $\dot{q}$).
+%%   \end{itemize}
+
+%% \noindent The main changes to handle $X$ when it is not full-column rank are the following:
+
+%% \begin{itemize}
+
+%%   \item freeMotionBase: $V \in \mathbb{R}^{(n_d) \times (n_d - \rho\{G\})}$, which is a basis for the null space of $G=J_f B$, and $\rho\{G\}$ is the rank of $G$. In the general case  ($2$ or $1$ contact point(s) for a rigid body in contact), $X$ is not full-column rank and the null space of $J_f$ is not equal to the null space of $J_c$. Then, $V$ has to be computed using the QR decomposition of $G^T = (XJ_cB)^T = QR = \begin{bmatrix}Q_1 & Q_2 \end{bmatrix} \begin{bmatrix} R_1 \\ 0 \end{bmatrix}$. The columns of $Q_2$ constitute a basis for $G$, then, $V$ is computed as:
+%%       \[ V= \begin{bmatrix}Q_1 & Q_2 \end{bmatrix}
+%%             \begin{bmatrix} 0_{(\rho\{G\}) \times (n_d - \rho\{G\})}  \\  
+%%                             I_{(n_d-\rho\{G\})  \times (n_d - \rho\{G\})}
+%%             \end{bmatrix}.
+%%       \]
+%%       For instance, consider HRP-2 N.$14$ (with $30$ actuated degrees of freedom), and suppose that only both feet are in contact with the ground. If there are 3 or more contact points in each foot, $V$ will have $24$ columns ($36-2(6)$) since $X$ will be full-column rank. If one foot has $3$ or more contact points and the other one has only $2$, the rank of $X$ will be $11$ and $V$ will have $25$ columns ($36-11$). If one foot has $3$ or more contact points and the other one has only $1$, the rank of $X$ will be 9, and $V$ will have $27$ columns ($36-9$). Note that the rank of $G$ depends directly on the rank of $X$.
+
+%%     \item driftContact: $\delta_c \in \mathbb{R}^{n_d}$, so that $\delta_c = -(J_f B)^+\dot{J_f}\dot{q}$. Since $X$ is not full-column rank in the general case, the simplifications used for SolverDynReduced are no longer valid. In order to compensate for the drift of the task, the term $\ddot{e}_f$ is added to keep the contact points at their current positions (recall that $-\dot{J_f}\dot{q}$ was obtained as an equivalence from $J_f\ddot{q}$ for the case that the acceleration is null, but more generally $J_f\ddot{q}=\ddot{e}_f^*-\dot{J_f}\dot{q}$). Thus, $\delta_c = (J_fB)^+ (\ddot{e}_f^* - \dot{J_f}\dot{q}) $, and using \eqref{eq.acceleration_points} and \eqref{eq.dotJf},  $\delta_c = (XJ_cB)^+ (X \ddot{e}_c^* + \hat{\omega}_c^2 x_f- X \dot{J_c}\dot{q})$. More explicitly,
+%%       \[   \delta_c = (X J_c B)^+ 
+%%                       \begin{bmatrix} X_1 \ddot{e}_{c_1}^* + \hat{\omega}_{c_1}^2 x_{f_1} - X_1 \dot{J}_{c_1}\dot{q} \\
+%%                                        \vdots \\
+%%                                       X_{n_c} \ddot{e}_{c_{n_c}}^* + \hat{\omega}_{c_{n_c}}^2 x_{f_{n_c}} - X_{n_c} \dot{J}_{c_{n_c}}\dot{q}
+%%                       \end{bmatrix}   
+%%       \]
+%%       where $X_i$ is the matrix corresponding to the $i^{th}$ contact, $x_{f_i}$ is the vector containing the contact points for the $i^{th}$ contact, and $\hat{\omega}_{c_i}$ can be obtained from $\omega_{c_i}$ in the relation $[v_{c_i} \ \omega_{c_i}]^T = J_{c_i} \dot{q}$.
+%% %% , and using the contact Jacobian: $\delta_c = -(XJ_cB)^+X\dot{J_c}\dot{q}$. 
+%% \end{itemize}
+
+%% \subsection{Solution signal}
+%% %--------------------------------------------------------------------
+
+%% The vector to be optimized by the solver is:
+%% \[   \begin{bmatrix} u \\ f
+%%      \end{bmatrix}
+%% \] 
+%% The hierarquical quadratic programming solver is based on different stages that specify either an equality or an inequality. These stages (in prioritized order) are the following:
+%% \begin{enumerate}
+%% \item Force Constraint (equality): 
+%% \[  \begin{bmatrix} \bar{S} B^{-T} V  &  \bar{S} J_f^T \end{bmatrix}
+%%     \begin{bmatrix} u \\ f \end{bmatrix} =
+%%     -\bar{S} (b+B^{-T} \delta_c)
+%% \]
+%% \item Force Constraint (inequality):
+%% \[  \begin{bmatrix} 0 & S^n \end{bmatrix}
+%%     \begin{bmatrix} u \\ f \end{bmatrix} \leq 0
+%% \]
+%% where $S^n \in \mathbb{R}^{ (\sum_{i=1}^{n_c} n_i) \times  (\sum_{i=1}^{n_c} 3 n_i) }$ is a matrix that selects the third component (corresponding to the normal component) of each force in $f$, and its elements are given by $s^n_{ij} = \delta(3i-j)$, with $\delta$ representing the Kronecker delta function.
+%% \item Tasks: the $i^{th}$ task is given by:
+%%   \[  \begin{bmatrix} J_i B V & 0 \end{bmatrix} 
+%%       \begin{bmatrix} u \\ f \end{bmatrix} =
+%%       \ddot{e}_i^* - \dot{J}_i \dot{q} - J_i B \delta_c
+%%   \]
+%% %\item `Friction' task
+%% \end{enumerate}
+ 
+
+%% %====================================================================
+%% \section{Tests}
+%% %====================================================================
+
+%% The solver has been tested for some of the cases where many degrees of freedom and tasks are involved, like the `planche' motion. From the comparison of the output signals, it could be inferred that the behavior it showed was similar to the one observed with SolverDynReduced. However, the interesting cases to test involve less than $3$ contact points in a foot. The following tests are intended to check the behavior of the solver for the special cases of 2 and 1 contact point(s).
+
+%% \subsection{Two contact points on the right foot}
+%% For this test, there are 4 contact points on the left foot but only 2 contact points on the right foot, located on the corners of the heel. The main task is to let the right foot rotate about the heel's edge ($y$ axis, as the robot is in its initial position). The motion starts with both feet being physically in full contact with the ground, then the right foot rotates about the heel, and finally the right foot rotates back to the initial position.
+%% \begin{figure}
+%%   \centering \footnotesize
+%%   \subfloat[test1 \footnotesize \label{fig:bot-view-test1}]{\includegraphics[width=0.35\linewidth]{images/smr/test1}} \qquad  %\hfill
+%%   \subfloat[test2 \footnotesize \label{fig:bot-view-test2}]{\includegraphics[width=0.35\linewidth]{images/smr/test2}} \\
+%%   \subfloat[test3 \footnotesize \label{fig:bot-view-test3}]{\includegraphics[width=0.35\linewidth]{images/smr/test3}} \qquad  %\hfill
+%%   \subfloat[test4 \footnotesize \label{fig:bot-view-test4}]{\includegraphics[width=0.35\linewidth]{images/smr/test4}}
+%%   \caption{Bottom view of the robot feet in robot-viewer. The green ball represents the CoM and the red one the ZMP. The left foot is completely kept on the grund and the heel of the right foot maintains contact with the ground.}
+%%   \label{fig:2contact_1-robot-viewer}
+%% \end{figure}
+%% The initial configuration of the robot is the half-sitting configuration defined in OpenHRP (not the one used `by default' in robot-specifics.py). The motions are first visualized with robot-viewer and then verified with OpenHRP. In OpenHRP, the tests involve a sequence play, with the stabilizer activated. Several attempts were performed modifying certain parameters so that the motion becomes more feasible, and some of them are detailed here. Unless mentioned, the conditions remain the same among the different attempts. Some of these attempts are the following. 
+%% \begin{itemize}
+%%   \item Attempt 1: rotate the right foot $-20$ degrees about the right heel without constraining the center of mass. The gain for the heel task was 50. In robot-viewer, even though the robot did not seem to fall down, the center of mass was clearly out of the support polygon and the ZMP was close to the limit, as Fig~\ref{fig:bot-view-test1} shows. Evidently, this motion in OpenHRP made the robot fall down.
+%%   \item Attempt 2: rotate the right foot -10 degrees about the right heel without constraining the center of mass. In robot-viewer, the robot did not seem to fall down and the center of mass was inside the support polygon (though close to the limit), as Fig.~\ref{fig:bot-view-test2} shows. However, in OpenHRP, the center of mass easily arrived to the limit and overpassed it; then, the robot falled down backwards as Fig.~\ref{fig:test2-openHRP} depicts.
+%% \begin{figure} %[ht]
+%%   \centering \footnotesize
+%%   \subfloat[\footnotesize \label{fig:openhrp-test2_1}]{\includegraphics[width=0.24\linewidth]{images/smr/test2_1}} \ 
+%%   \subfloat[\footnotesize \label{fig:openhrp-test2_2}]{\includegraphics[width=0.24\linewidth]{images/smr/test2_2}} \
+%%   \subfloat[\footnotesize \label{fig:openhrp-test2_3}]{\includegraphics[width=0.24\linewidth]{images/smr/test2_3}} \
+%%   \subfloat[\footnotesize \label{fig:openhrp-test2_4}]{\includegraphics[width=0.24\linewidth]{images/smr/test2_4}}
+%%   \caption{Results on OpenHRP for test2. The images show that the CoM goes beyond the support polygon and thus, the robot falls down.}
+%%   \label{fig:test2-openHRP}
+%% \end{figure}
+%%   \item Attempt 3: rotate the right foot -20 degrees about the right heel constraining the center of mass ($xy$) to its initial position (center of the two feet, and it lies inside the support polygon). The CoM task had a higher priority than the heel task. The gain for the CoM was `setByPoint(100,10,0.005,0.8)'. In robot-viewer, the robot was completely stable and naturally, the CoM task was fulfilled (Fig.~\ref{fig:bot-view-test3}). In OpenHRP, the CoM did not stay in its initial position but moved to the right as the heel started to rotate (Fig.~\ref{fig:test3-openHRP}), and even though the robot did not fall, the forces distribution on the feet suggest that the real robot would fall down.
+%% \begin{figure} %[ht]
+%%   \centering \footnotesize
+%%   \subfloat[\footnotesize \label{fig:openhrp-test3_1}]{\includegraphics[width=0.24\linewidth]{images/smr/test3_1}} \ 
+%%   \subfloat[\footnotesize \label{fig:openhrp-test3_2}]{\includegraphics[width=0.24\linewidth]{images/smr/test3_2}} \
+%%   \subfloat[\footnotesize \label{fig:openhrp-test3_3}]{\includegraphics[width=0.24\linewidth]{images/smr/test3_3}} \
+%%   \subfloat[\footnotesize \label{fig:openhrp-test3_4}]{\includegraphics[width=0.24\linewidth]{images/smr/test3_4}}
+%%   \caption{Results on OpenHRP for test3. The images show that the CoM moves on the lateral direction and the forces distribution on the feet would make the real robot fall down.}
+%%   \label{fig:test3-openHRP}
+%% \end{figure}
+%%   \item Attempt 4: rotate the right foot -20 degrees about the right heel constraining the center of mass ($xy$) $0.3$ cm on $y$ away from its initial position. In robot-viewer, the CoM is on the interior boundary of the left foot (Fig.~\ref{fig:bot-view-test4}). In OpenHRP, the CoM approximately keeps its initial position in the $y$ (lateral) direction, although it should have moved towards the left foot (Fig.~\ref{fig:test4-openHRP}). In the $x$ (forward) direction, the CoM moves slightly forward when the heel is rotating back to its initial position, but it remains by far inside the support polygon. This is also observed as a certain oscilation on the upper body of the robot. The forces are propertly distributed along the feet, and it is expected that the motion will have a good behavior in the real robot. 
+%% \begin{figure} %[ht]
+%%   \centering \footnotesize
+%%   \subfloat[\footnotesize \label{fig:openhrp-test4_1}]{\includegraphics[width=0.35\linewidth]{images/smr/test4_1}} \qquad 
+%%   \subfloat[\footnotesize \label{fig:openhrp-test4_2}]{\includegraphics[width=0.35\linewidth]{images/smr/test4_2}} \\
+%%   \subfloat[\footnotesize \label{fig:openhrp-test4_3}]{\includegraphics[width=0.35\linewidth]{images/smr/test4_3}} \qquad
+%%   \subfloat[\footnotesize \label{fig:openhrp-test4_4}]{\includegraphics[width=0.35\linewidth]{images/smr/test4_4}}
+%%   \caption{Results on OpenHRP for test4. The images show that the CoM in the lateral direction is kept but it moves forward and then backward, but this motion is likely to be successfully implemented on the real robot.}
+%%   \label{fig:test4-openHRP}
+%% \end{figure}
+%% \end{itemize}
+
+
+%% For all these motions, the dynamic model of the robot $A\ddot{q}+b+J_ff=S^T\tau$ was verified using the class `SolverVerifications', which would show a message in case the error in the equality is above a certain limit ($1 \times 10^{-5}$ for this case).
+%% For the last attempt (number $4$), 
+
+
+%\subsubsection*{Sinusoidal motion of the foot}
+
+
+\subsection{One contact point on the right foot}
+fix one point in a corner of the heel and let the foot rotate about the z axis (not realistic if there is friction). Also, try more rotations so that only the point remains in contact (more realistic, in case there is friction.
+
+
+
+%\bibliographystyle{IEEEtran}
+%\bibliography{refs}
+
+\end{document}

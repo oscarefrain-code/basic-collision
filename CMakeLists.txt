@@ -1,0 +1,25 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+SET(CMAKE_VERBOSE_MAKEFILE ON)
+PROJECT(BasicCollision)
+
+INCLUDE_DIRECTORIES(${BasicCollision_SOURCE_DIR}/include)
+SET(LIBRARY_OUTPUT_PATH ${BasicCollision_SOURCE_DIR}/lib)
+
+ADD_LIBRARY( BasicCollision SHARED
+  src/collision-helper.cpp
+  src/collision-two-triangles.cpp
+  src/collision-two-rectangles.cpp
+  src/collision-two-boxes.cpp
+  src/collision-one-many-boxes.cpp
+  )
+
+
+FILE(GLOB files "${BasicCollision_SOURCE_DIR}/include/*.h")
+INSTALL(FILES ${files} DESTINATION include/basicCollision)
+
+INSTALL(TARGETS BasicCollision
+  LIBRARY DESTINATION lib
+  )
+
+ADD_SUBDIRECTORY (tests)
