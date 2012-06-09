@@ -1,24 +1,41 @@
 /***********************************************************************************
+ * Copyright 2012, Oscar Efrain Ramos Ponce, LAAS-CNRS 
  *
+ * This file is part of basic-collision
+ * basic-collision is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * basic-collision is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Lesser Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with basic-collision.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ************************************************************************************/
+
+/*
  * Basic components and class to be used for the other classes
- *                                   Oscar E. Ramos Ponce
  *
- ********************************************************************************** */
+ */
 
 
-#ifndef __COLLISION_HELPER_H__
-#define __COLLISION_HELPER_H__
+#ifndef __OPERATIONS_HELPER_H__
+#define __OPERATIONS_HELPER_H__
 
 #include <math.h>
 #include <vector>
 #include <iostream>
 
 
-/* Definition of a 'minimum value' to be used as a threshold */
+/* Definition of a 'minimum value' to be used as a threshold for the triangle*/
 #define TRI_EPSILON 0.000001
 //#define TRI_EPSILON 0.00000001
 
 
+/* Structure to store a 3d point */
 struct Point3d
 {
   double x;

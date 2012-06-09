@@ -1,10 +1,27 @@
 /***********************************************************************************
+ * Copyright 2012, Oscar Efrain Ramos Ponce, LAAS-CNRS 
+ *
+ * This file is part of basic-collision
+ * basic-collision is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * basic-collision is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Lesser Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with basic-collision.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ************************************************************************************/
+
+/*
  * Hexahedron/hexahedron intersection test:
  *   Each hexahedron is decomposed into a set of rectangles and the collision
  *   between the rectangles is tested.
  *  
- *                                           Oscar E. Ramos Ponce, LAAS-CNRS, France
- ************************************************************************************/
+ */
 
 
 #include <collision-two-boxes.h>

@@ -7,7 +7,7 @@ INCLUDE_DIRECTORIES(${BasicCollision_SOURCE_DIR}/include)
 SET(LIBRARY_OUTPUT_PATH ${BasicCollision_SOURCE_DIR}/lib)
 
 ADD_LIBRARY( BasicCollision SHARED
-  src/collision-helper.cpp
+  src/operations-helper.cpp
   src/collision-two-triangles.cpp
   src/collision-two-rectangles.cpp
   src/collision-two-boxes.cpp
