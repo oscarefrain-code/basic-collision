@@ -3,7 +3,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 PROJECT(BasicCollision)
 
-INCLUDE_DIRECTORIES(${BasicCollision_SOURCE_DIR}/include)
+INCLUDE_DIRECTORIES(
+  ${BasicCollision_SOURCE_DIR}/include
+  /home/oramos/compil/tools/include/eigen3)
 SET(LIBRARY_OUTPUT_PATH ${BasicCollision_SOURCE_DIR}/lib)
 
 ADD_LIBRARY( BasicCollision SHARED
@@ -11,7 +13,7 @@ ADD_LIBRARY( BasicCollision SHARED
   src/collision-two-triangles.cpp
   src/collision-two-rectangles.cpp
   src/collision-two-boxes.cpp
-  src/collision-one-many-boxes.cpp
+  #src/collision-one-many-boxes.cpp
   )
 
 

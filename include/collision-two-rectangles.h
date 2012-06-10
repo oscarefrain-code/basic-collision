@@ -31,6 +31,43 @@
 #include <vector>
 #include <operations-helper.h>
 #include <collision-two-triangles.h>
+#include <Eigen/Dense>
+
+/* ------------------------------------------------------------------ */
+class Rectangle
+{
+ public:
+  /* -- Vertices -- */
+  Vector3d v1;   
+  Vector3d v2;   
+  Vector3d v3;
+  Vector3d v4;
+  /* -- Constructors -- */
+  Rectangle()
+    {
+      v1 << 0, 0, 0;
+      v2 << 0, 0, 0;
+      v3 << 0, 0, 0;
+      v4 << 0, 0, 0;
+    }
+  Rectangle(Vector3d v1in, Vector3d v2in, Vector3d v3in, Vector3d v4in)
+    { 
+      setVertices(v1in, v2in, v3in, v4in);
+    }
+  /* -- Functions -- */
+  void setVertices(Vector3d v1in, Vector3d v2in, Vector3d v3in, Vector3d v4in)
+  {  v1=v1in; v2=v2in; v3=v3in; v4=v4in;
+  }
+  void getVertices(Vector3d &v1out, Vector3d &v2out, Vector3d &v3out, Vector3d &v4out)
+  {  v1out=v1; v2out=v2; v3out=v3; v4out=v4;
+  }
+  void print()
+  {
+    /* Print as: V1=[x y z], V2=[x y z], V3=[x y z], V4=[x y z] */
+    std::cout << "V1=["<< v1.transpose() << "], V2=[" << v2.transpose() << "], V3=["
+	      << v3.transpose() << "], V4=[" << v4.transpose() << "]" << std::endl;
+  }
+};
 
 
 class CollisionTwoRectangles
@@ -39,19 +76,24 @@ class CollisionTwoRectangles
  public:
    /* -- Constructors -- */
   CollisionTwoRectangles( void );
-  CollisionTwoRectangles(double R1_V0[3], double R1_V1[3], double R1_V2[3], double R1_V3[3],
-			 double R2_V0[3], double R2_V1[3], double R2_V2[3], double R2_V3[3]);
+  CollisionTwoRectangles(Vector3d R1_V0, Vector3d R1_V1, Vector3d R1_V2, Vector3d R1_V3,
+			 Vector3d R2_V0, Vector3d R2_V1, Vector3d R2_V2, Vector3d R2_V3);
+  CollisionTwoRectangles(Rectangle r1in, Rectangle r2in);
 
   /* -- Set values for the vertices (in succesive order, clockwise or anticlockwise) -- */
-  void setVerticesAll(double R1_V0[3], double R1_V1[3], double R1_V2[3], double R1_V3[3],
-		      double R2_V0[3], double R2_V1[3], double R2_V2[3], double R2_V3[3]);
-  void setVerticesR1(double R1_V0[3], double R1_V1[3], double R1_V2[3], double R1_V3[3]);
-  void setVerticesR2(double R2_V0[3], double R2_V1[3], double R2_V2[3], double R2_V3[3]);
+  void setVerticesAll(Vector3d r1v1, Vector3d r1v2, Vector3d r1v3, Vector3d r1v4,
+		      Vector3d r2v1, Vector3d r2v2, Vector3d r2v3, Vector3d r2v4);
+  void setVerticesR1(Vector3d V1in, Vector3d V2in, Vector3d V3in, Vector3d V4in);
+  void setVerticesR2(Vector3d V1in, Vector3d V2in, Vector3d V3in, Vector3d V4in);
+
+  /* -- Set the rectangles -- */
+  void setRectangles(Rectangle r1in, Rectangle r2in);
+  void setRectangle1(Rectangle r1in);
+  void setRectangle2(Rectangle r2in);
 
   /* -- Get the values of the vertices -- */
-  void getVerticesR1(double R1_V0[3], double R1_V1[3], double R1_V2[3], double R1_V3[3]);
-  void getVerticesR2(double R2_V0[3], double R2_V1[3], double R2_V2[3], double R2_V3[3]);
-
+  void getVerticesR1(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out, Vector3d &V4out);
+  void getVerticesR2(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out, Vector3d &V4out);
 
   /* -- Compute the collision detection -- */
   int computeRRintersections( void );
@@ -61,13 +103,15 @@ class CollisionTwoRectangles
   void printRectanglesVertices( void );
 
   /* -- Collision Points -- */
-  std::vector<Point3d> pointsRR;
+  std::vector<Vector3d> pointsRR;
+  //std::vector<Point3d> pointsRR;
  
  private:
   /* --- Variables --- */
-  double V0[3], V1[3], V2[3], V3[3];   // Vertices of rectangle 1: V0, V1, V2, V3
-  double U0[3], U1[3], U2[3], U3[3];   // Vertices of rectangle 2: U0, U1, U2, U3
+  Rectangle R1, R2;                        // Rectangles to be used
   int collisionIndicator;
+  /* double V0[3], V1[3], V2[3], V3[3];   // Vertices of rectangle 1: V0, V1, V2, V3 */
+  /* double U0[3], U1[3], U2[3], U3[3];   // Vertices of rectangle 2: U0, U1, U2, U3 */
 
 };
 

@@ -32,62 +32,93 @@
 CollisionTwoRectangles::
 CollisionTwoRectangles( void )
 {
-  double zeros[3] = {0.0, 0.0, 0.0};
-  set(V0, zeros); set(V1, zeros); set(V2, zeros); set(V3, zeros);
-  set(U0, zeros); set(U1, zeros); set(U2, zeros); set(U3, zeros);
   collisionIndicator = 0;
 }
 
 
 /* --- Constructor that initializes the vertices of both rectangles --- */
 CollisionTwoRectangles::
-CollisionTwoRectangles(double R1_V0[3], double R1_V1[3], double R1_V2[3], double R1_V3[3],
-		       double R2_V0[3], double R2_V1[3], double R2_V2[3], double R2_V3[3])
+CollisionTwoRectangles(Vector3d r1v1, Vector3d r1v2, Vector3d r1v3, Vector3d r1v4,
+		       Vector3d r2v1, Vector3d r2v2, Vector3d r2v3, Vector3d r2v4)
 {
-  setVerticesAll(R1_V0, R1_V1, R1_V2, R1_V3, R2_V0, R2_V1, R2_V2, R2_V3);
+  R1.setVertices(r1v1, r1v2, r1v3, r1v4);
+  R2.setVertices(r2v1, r2v2, r2v3, r2v4);
+  collisionIndicator = 0;
+}
+
+
+/* --- Constructor that initializes the vertices of both rectangles --- */
+CollisionTwoRectangles::
+CollisionTwoRectangles(Rectangle r1in, Rectangle r2in)
+{
+  R1=r1in; R2=r2in;
   collisionIndicator = 0;
 }
 
 
 /* --- Set the vertices of both rectangles --- */
 void CollisionTwoRectangles::
-setVerticesAll(double R1_V0[3], double R1_V1[3], double R1_V2[3], double R1_V3[3],
-	       double R2_V0[3], double R2_V1[3], double R2_V2[3], double R2_V3[3])
+setVerticesAll(Vector3d r1v1, Vector3d r1v2, Vector3d r1v3, Vector3d r1v4,
+	       Vector3d r2v1, Vector3d r2v2, Vector3d r2v3, Vector3d r2v4)
 {
-  setVerticesR1(R1_V0, R1_V1, R1_V2, R1_V3);
-  setVerticesR2(R2_V0, R2_V1, R2_V2, R2_V3);
+  R1.setVertices(r1v1, r1v2, r1v3, r1v4);
+  R2.setVertices(r2v1, r2v2, r2v3, r2v4);
 }
 
 
 /* --- Set the vertices of rectangle 1 --- */
 void CollisionTwoRectangles::
-setVerticesR1(double R1_V0[3], double R1_V1[3], double R1_V2[3], double R1_V3[3])
+setVerticesR1(Vector3d V1in, Vector3d V2in, Vector3d V3in, Vector3d V4in)
 {
-  set(V0, R1_V0); set(V1, R1_V1); set(V2, R1_V2); set(V3, R1_V3);
+  R1.setVertices(V1in, V2in, V3in, V4in);
 }
 
 
 /* --- Set the vertices of rectangle 2 --- */
 void CollisionTwoRectangles::
-setVerticesR2(double R2_V0[3], double R2_V1[3], double R2_V2[3], double R2_V3[3])
+setVerticesR2(Vector3d V1in, Vector3d V2in, Vector3d V3in, Vector3d V4in)
 {
-  set(U0, R2_V0); set(U1, R2_V1); set(U2, R2_V2); set(U3, R2_V3);
+  R2.setVertices(V1in, V2in, V3in, V4in);
+}
+
+
+/* --- Set both rectangles --- */
+void CollisionTwoRectangles::
+setRectangles(Rectangle r1in, Rectangle r2in)
+{
+  R1=r1in; R2=r2in;
+}
+
+
+/* --- Set rectangle 1 --- */
+void CollisionTwoRectangles::
+setRectangle1(Rectangle r1in)
+{
+  R1=r1in;
+}
+
+
+/* --- Set rectangle 2 --- */
+void CollisionTwoRectangles::
+setRectangle2(Rectangle r2in)
+{
+  R2=r2in;
 }
 
 
 /* --- Get the vertices of rectangle 1 --- */
 void CollisionTwoRectangles::
-getVerticesR1(double R1_V0[3], double R1_V1[3], double R1_V2[3], double R1_V3[3])
+getVerticesR1(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out, Vector3d &V4out)
 {
-  set(R1_V0, V0); set(R1_V1, V1); set(R1_V2, V2); set(R1_V3, V3);
+  R1.getVertices(V1out, V2out, V3out, V4out);
 }
 
 
 /* --- Get the vertices of rectangle 2 --- */
 void CollisionTwoRectangles::
-getVerticesR2(double R2_V0[3], double R2_V1[3], double R2_V2[3], double R2_V3[3])
+getVerticesR2(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out, Vector3d &V4out)
 {
-  set(R2_V0, U0); set(R2_V1, U1); set(R2_V2, U2); set(R2_V3, U3);
+  R2.getVertices(V1out, V2out, V3out, V4out);
 }
 
 
@@ -104,10 +135,10 @@ computeRRintersections( void )
   pointsRR.clear();
 
   /* Divide the rectangle/rectangle problem in 4 triangle/triangle problem  */
-  CollisionTwoTriangles scene1(V0, V1, V2, U0, U1, U2);
-  CollisionTwoTriangles scene2(V0, V1, V2, U2, U3, U0);
-  CollisionTwoTriangles scene3(V2, V3, V0, U0, U1, U2);
-  CollisionTwoTriangles scene4(V2, V3, V0, U2, U3, U0);
+  CollisionTwoTriangles scene1(R1.v1, R1.v2, R1.v3, R2.v1, R2.v2, R2.v3);
+  CollisionTwoTriangles scene2(R1.v1, R1.v2, R1.v3, R2.v3, R2.v4, R2.v1);
+  CollisionTwoTriangles scene3(R1.v3, R1.v4, R1.v1, R2.v1, R2.v2, R2.v3);
+  CollisionTwoTriangles scene4(R1.v3, R1.v4, R1.v1, R2.v3, R2.v4, R2.v1);
 
   collisionTT[0] = scene1.computeTTintersections();
   collisionTT[1] = scene2.computeTTintersections();
@@ -117,23 +148,23 @@ computeRRintersections( void )
   collisionIndicator = collisionTT[0] || collisionTT[1] ||
                        collisionTT[2] || collisionTT[3];
 
-  std::cout << "Collisions : ";
-  for (int i=0; i<4; i++)
-    std::cout << collisionTT[i] << " ";
-  std::cout << std::endl;
+  // std::cout << "Collisions : ";
+  // for (int i=0; i<4; i++)
+  //   std::cout << collisionTT[i] << " ";
+  // std::cout << std::endl;
 
-  for (int i=0; i<scene1.pointsTT.size(); i++)
-    scene1.pointsTT[i].print();
-  std::cout << std::endl;
-  for (int i=0; i<scene2.pointsTT.size(); i++)
-    scene2.pointsTT[i].print();
-  std::cout << std::endl;
-  for (int i=0; i<scene3.pointsTT.size(); i++)
-    scene3.pointsTT[i].print();
-  std::cout << std::endl;
-  for (int i=0; i<scene4.pointsTT.size(); i++)
-    scene4.pointsTT[i].print();
-  std::cout << std::endl;
+  // for (int i=0; i<scene1.pointsTT.size(); i++)
+  //   scene1.pointsTT[i].print();
+  // std::cout << std::endl;
+  // for (int i=0; i<scene2.pointsTT.size(); i++)
+  //   scene2.pointsTT[i].print();
+  // std::cout << std::endl;
+  // for (int i=0; i<scene3.pointsTT.size(); i++)
+  //   scene3.pointsTT[i].print();
+  // std::cout << std::endl;
+  // for (int i=0; i<scene4.pointsTT.size(); i++)
+  //   scene4.pointsTT[i].print();
+  // std::cout << std::endl;
 
 
   /* Copy all the collision points in pointsRR  */
@@ -160,11 +191,9 @@ void CollisionTwoRectangles::
 printRRcollisionInformation( void )
 {
   if (collisionIndicator) {
-    std::cout << "Result: Rectangles are intersecting" << std::endl;
-    std::cout << " - Intersections occur at: " << std::endl;
+    std::cout << "Result: Rectangles are intersecting at" << std::endl;
     for (int i=0; i<pointsRR.size(); i++){
-      std::cout << "     "; pointsRR[i].print();
-      std::cout << std::endl;
+      std::cout << "  (" << pointsRR[i].transpose() << ")  ";
     }
   }
   else{
@@ -177,10 +206,7 @@ printRRcollisionInformation( void )
 void CollisionTwoRectangles::
 printRectanglesVertices( void )
 {
-  std::cout << "Vertices: ";
-  std::cout << "\n  - Rectangle 1: "; printVector(V0); printVector(V1); printVector(V2); printVector(V2);
-  std::cout << "\n  - Rectangle 2: "; printVector(U0); printVector(U1); printVector(U2); printVector(U3);
-  std::cout << std::endl;
-
+  std::cout << "Rectangle 1: "; R1.print();
+  std::cout << "Rectangle 2: "; R2.print();
 }
 

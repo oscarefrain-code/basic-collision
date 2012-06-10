@@ -68,20 +68,48 @@
 \section{Collision of triangles}
 %====================================================================
 
-The class called `CollisionTwoTriangles' detects the collision between two triangles and finds the collision points. If it is a single point in collision, the point will be obtained, if it is an edge, the extremes of the edge are found, and if there is some overlapping between the triangles, the extreme vertices of the overlapping are returned (the vertices constituting strictly the convex hull).
+The class called `CollisionTwoTriangles' detects the collision between two triangles and finds the collision points. If it is a single point in collision, the point will be obtained, if it is an edge, the extremes of the edge are found, and if there is some overlapping between the triangles, the extreme vertices of the overlapping  are returned (the vertices constituting strictly the convex hull).
 
-\subsection*{Initialization}
-The class can be called specifying the vertices of the first triangle followed by the vertices of the second triangle in the following way: 
-  \begin{lstlisting}
-  CollisionTwoTriangles scene(T1V1, T1V2, T1V3, T2V1, T2V2, T2V3);
-  \end{lstlisting}
-where \textit{scene} is the name of the object, $Ti$ refers to the triangle $i$, and $Vj$ to its $j^{th}$ vertex (each vertex is of type double[3]). Another possibility is to initialize the object without specifying any vertex (by default the initial vertices would be the origin of coordinates, which would lead to a degenerated triangle). In this case, the specification would be given using any of the following functions:
-\begin{lstlisting}
-  scene.setVerticesAll(T1V1, T1V2, T1V3, T2V1, T2V2, T2V3);
-  scene.setVerticesT1(T1V1, T1V2, T1V3);
-  scene.setVerticesT2(T2V1, T2V2, T2V3);
-\end{lstlisting}
-which set all the vertices at once, or those corresponding to the first and second triangle sepparately. If needed, the values of the vertices can also be recovered as in the previous last two functions, replacing \textit{set} by \textit{get}.
+\subsection{Triangle}
+A class called \textit{Triangle} contains the three vertices of a triangle. These vertices are called \textit{v1}, \textit{v2}, \textit{v3} and they specified as Eigen::Vector3d. The constructors for the class admit the following initializations:
+\begin{itemize}
+  \item \emph{Triangle T}: \\Create an instance of Triangle, initializing by default all the vertices to the origin $(0,0,0)$.
+  \item \emph{Triangle T(v1,v2,v3)}: \\Create an instance of Triangle specifying that the vertices will be v1, v2, v3, which are 3D vectors defined as Eigen::Vector3d.
+\end{itemize}
+Assuming that an instance of the class Triangle is called \textit{T}, the associated methods are:
+\begin{itemize}
+  \item \emph{T.setVertices(v1, v2, v3)}: \\Set the values for the three vertices, where v1, v2 and v3 are elements of Vector3d.
+  \item \emph{T.getVertices(v1, v2, v3)}: \\Get the values of the three vertices.
+  \item \emph{T.print()}: \\Print the values of the vertices in the screen.
+\end{itemize}
+
+
+\subsection{Initialization of the Collision Detector}
+
+The class admits three different ways of initialization:
+\begin{itemize}
+  \item CollisionTwoTriangles scene: \\Initializes the instance setting by default all the vertices of both triangles to the origin $(0,0,0)$, which is equivalent to initialize two degenerated triangles.
+  \item CollisionTwoTriangles scene(T1, T2):\\Initializes the collision instance specifying the triangles T1 and T2 that will be used. Both T1 and T2 are instances of the class Triangle. This is the suggested method.
+  \item CollisionTwoTriangles scene(T1V1, T1V2, T1V3, T2V1, T2V2, T2V3):\\Initializes the collision instance specifying the vertices of the first triangle, followed by the vertices of the second triangle. All the vertices are elements of Eigen::Vector3d, $Ti$ refers to the triangle $i$, and $Vj$ to its $j^{th}$ vertex.
+\end{itemize}
+One way to specify the triangles is through the following methods. We will assume that `scene' is an instance of the class CollisionTwoTriangles, and that T1, T2 are instances of the class Triangle.
+\begin{itemize}
+  \item scene.setTriangles(T1,T2)
+  \item scene.setTriangle1(T1)
+  \item scene.setTriangle2(T2)
+\end{itemize}
+Another way is to directly specify the vertices of the triangles. The elements to be used are 3d vectors as the ones used for one of the constructors:
+\begin{itemize}
+  \item scene.setVerticesAll(T1V1, T1V2, T1V3, T2V1, T2V2, T2V3)
+  \item scene.setVerticesT1(V1,V2,V3)
+  \item scene.setVerticesT2(V1,V2,V3)
+\end{itemize}
+%% \begin{lstlisting}
+%%   scene.setVerticesAll(T1V1, T1V2, T1V3, T2V1, T2V2, T2V3);
+%%   scene.setVerticesT1(T1V1, T1V2, T1V3);
+%%   scene.setVerticesT2(T2V1, T2V2, T2V3);
+%% \end{lstlisting}
+Also, the values of the vertices can be recovered using the methods getVerticesT1(v1,v2,v3) and getVerticesT2(v1,v2,v3).
 
 \subsection*{Computation}
 The collision detection is computed when the following function is called:
@@ -96,12 +124,16 @@ Here, \textit{pointsTT} is a vector of \textit{Point3d}, where \textit{Point3d} 
 
 \subsection*{Printing Information}
 The information corresponding to the vertices defining the triangles, and to the collision points can be shown on the screen using the following functions:
-\begin{lstlisting}
-  scene.printTrianglesVertices()
-  scene.printTTcollisionInformation()
-\end{lstlisting}
+\begin{itemize}
+  \item scene.printTrianglesVertices()
+  \item scene.printTTcollisionInformation()
+\end{itemize}
 This functions only output information on the screen and do not return any value. Their main purpose is to debug some result.
 
+\subsection{Algorithm}
+
+Let the collision points be called $p_i$, which in the code are defined as a vector of Eigen::Vector3d. 
+First, the set containing the collision points is set to empty, to avoid possible `previous' contact points. Then, the equation of the plane containing the vertices of the first triangle is obtained. 
 
 %====================================================================
 \section{Collision of Rectangles}

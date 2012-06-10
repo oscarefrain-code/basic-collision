@@ -23,13 +23,35 @@
 
 #include <collision-two-triangles.h>
 #include <iostream>
+#include <Eigen/Dense>
 
-
-void evaluateTTCollision( CollisionTwoTriangles &scene1 );
-
-int main( void )
+void testTriangle( void )
 {
+  Eigen::Vector3d V1(0.0, 0.0, 0.0);
+  Eigen::Vector3d V2(1.0, 0.0, 0.0);
+  Eigen::Vector3d V3(1.0, 1.0, 0.0);
 
+  Triangle T1(V1, V2, V3);
+  T1.print();
+
+  Eigen::Vector3d u1, u2, u3;
+  T1.getVertices(u1, u2, u3);
+
+  std::cout << u2.transpose() << std::endl;
+
+}
+
+void evaluateTTCollision( CollisionTwoTriangles &scene1 )
+{
+  int collisionDetected;
+  collisionDetected = scene1.computeTTintersections();
+  scene1.printTrianglesVertices();
+  scene1.printTTcollisionInformation();
+  std::cout << std::endl;
+}
+
+void testTriangleCollision( void )
+{
   Eigen::Vector3d V1, V2, V3;
 
   V1 << 0, 0, 0;  V2 << 1, 0, 0; V3 << 1, 1, 0;
@@ -42,56 +64,27 @@ int main( void )
   scene.setTriangles(T1,T2);
   evaluateTTCollision( scene );
 
-  /* No intersection (coplanar) */
   V1 << 0, 2, 0;  V2 << 1, 2, 0; V3 << 1, 3, 0;
   scene.setVerticesT2(V1, V2, V3);
   evaluateTTCollision( scene );
 
-  /* Intersection: triangle is perpendicular */
-  /*     (0.5,0.5,0) and (1,0.5,0)           */ 
   V1 << 0, 0.5, -0.5;  V2 << 1, 0.5, -0.5; V3 << 1, 0.5, 0.5;
   scene.setVerticesT2(V1, V2, V3);
   evaluateTTCollision( scene );
 
-  /* Intersection: One point (perpendicular) */
-  /*   (0.5, 0.25, 0.0)                      */
-  V1 << 0.5, 0.25, 0;  V2 << 1, 0, 1; V3 << 0, 1, 1;
-  scene.setVerticesT2(V1, V2, V3);
-  evaluateTTCollision( scene );
+}
 
-  /* Intersection: coplanar (one part intersecting) */
-  /* ( 1, 0, 0), ( 1, 1, 0) and ( 0.5, 0.5, 0)      */
-  V1 << 0, 1, 0;  V2 << 1, 0, 0; V3 << 1, 1, 0;
-  scene.setVerticesT2(V1, V2, V3);
-  evaluateTTCollision( scene );
 
-  /* Intersection: coplanar (one absolutely contained in the other) */
-  /* ( 0, 0, 0), ( 1, 0, 0), ( 1, 1, 0)                             */
-  V1 << -2, -1, 0;  V2 << 1, 2, 0; V3 << 3, -1, 0;
-  scene.setVerticesT2(V1, V2, V3);
-  evaluateTTCollision( scene );
+int main( void )
+{
 
-  // /* Miscellaneous tests */
-  // setVector(T1V1, 0.0, 3.0, 0.0);
-  // setVector(T1V2, 3.0, 0.0, 0.0);
-  // setVector(T1V3, 3.0, 3.0, 0.0);
-  // setVector(T2V1, -1.0, 2.0, 0.0);
-  // setVector(T2V2, 2.0, -1.0, 0.0);
-  // setVector(T2V3, 2.0, 2.0, 0.0);
-  // evaluate(scene, T1V1, T1V2, T1V3, T2V1, T2V2, T2V3);
+  std::cout << "Testing the class Triangle" << std::endl;
+  testTriangle();
+
+  std::cout << " --- Testing triangle collision --- " << std::endl << std::endl;
+  testTriangleCollision();
 
   return 0;
 }
-
-
-void evaluateTTCollision( CollisionTwoTriangles &scene1 )
-{
-  int collisionDetected;
-  collisionDetected = scene1.computeTTintersections();
-  scene1.printTrianglesVertices();
-  scene1.printTTcollisionInformation();
-  std::cout << std::endl;
-}
-
 
 

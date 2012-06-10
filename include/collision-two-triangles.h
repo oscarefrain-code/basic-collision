@@ -32,7 +32,50 @@
 #include <iostream>
 #include <operations-helper.h>
 
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
 
+using namespace Eigen;
+
+/* Definition of a 'minimum value' to be used as a threshold for the triangle test*/
+//#define TRI_EPSILON 0.000001
+
+/* ------------------------------------------------------------------ */
+class Triangle
+{
+ public:
+  /* -- Vertices -- */
+  Vector3d v1;   
+  Vector3d v2;   
+  Vector3d v3;
+  /* -- Constructors -- */
+  Triangle()
+    {
+      v1 << 0, 0, 0;
+      v2 << 0, 0, 0;
+      v3 << 0, 0, 0;
+    }
+  Triangle(Vector3d v1in, Vector3d v2in, Vector3d v3in)
+    { 
+      setVertices(v1in, v2in, v3in);
+    }
+  /* -- Functions -- */
+  void setVertices(Vector3d v1in, Vector3d v2in, Vector3d v3in)
+  {  v1=v1in; v2=v2in; v3=v3in;
+  }
+  void getVertices(Vector3d &v1out, Vector3d &v2out, Vector3d &v3out)
+  {  v1out=v1; v2out=v2; v3out=v3;
+  }
+  void print()
+  {
+    /* Print as: V1=[x y z], V2=[x y z], V3=[x y z] */
+    std::cout << "V1=["<< v1.transpose() << "], V2=[" << v2.transpose()
+	      << "], V3=[" << v3.transpose() << "] " << std::endl;
+  }
+};
+
+
+/* ------------------------------------------------------------------ */
 class CollisionTwoTriangles
 : public OperationsHelper
 {
@@ -40,21 +83,26 @@ class CollisionTwoTriangles
 
   /* -- Constructors -- */
   CollisionTwoTriangles();
-  CollisionTwoTriangles(double T1_V0[3], double T1_V1[3], double T1_V2[3],
-			double T2_V0[3], double T2_V1[3], double T2_V2[3]);
+  CollisionTwoTriangles(Triangle t1, Triangle t2);
+  CollisionTwoTriangles(Vector3d t1v1, Vector3d t1v2, Vector3d t1v3,
+  			Vector3d t2v1, Vector3d t2v2, Vector3d t2v3);
+
+  /* -- Set the triangles -- */
+  void setTriangles(Triangle t1, Triangle t2);
+  void setTriangle1(Triangle t1);
+  void setTriangle2(Triangle t2);
 
   /* -- Set values for the vertices -- */
-  void setVerticesAll(double T1_V0[3], double T1_V1[3], double T1_V2[3],
-		      double T2_V0[3], double T2_V1[3], double T2_V2[3]);
-  void setVerticesT1(double T1_V0[3], double T1_V1[3], double T1_V2[3]);
-  void setVerticesT2(double T2_V0[3], double T2_V1[3], double T2_V2[3]);
+  void setVerticesAll(Vector3d t1v1, Vector3d t1v2, Vector3d t1v3,
+		      Vector3d t2v1, Vector3d t2v2, Vector3d t2v3);
+  void setVerticesT1(Vector3d V1in, Vector3d V2in, Vector3d V3in);
+  void setVerticesT2(Vector3d V1in, Vector3d V2in, Vector3d V3in);
 
   /* -- Get the values of the vertices -- */
-  void getVerticesT1(double T1_V0[3], double T1_V1[3], double T1_V2[3]);
-  void getVerticesT2(double T2_V0[3], double T2_V1[3], double T2_V2[3]);
+  void getVerticesT1(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out);
+  void getVerticesT2(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out);
 
   /* -- Compute the collision detection algorithm -- */
-  int computeTTintersectionsNoLine( void );
   int computeTTintersections( void );
 
   /* -- Print additional information -- */
@@ -62,33 +110,35 @@ class CollisionTwoTriangles
   void printTrianglesVertices( void );
 
   /* -- Vector to store the collision points -- */
-  std::vector<Point3d> pointsTT;
+  std::vector<Vector3d> pointsTT;
 
  private:
 
   /* --- Variables --- */
-  double V0[3], V1[3], V2[3];   // Vertices of triangle 1: V0, V1, V2
-  double U0[3], U1[3], U2[3];   // Vertices of triangle 2: U0, U1, U2
-  double D[3];                  // Direction of the (intersecting) line
+  Triangle T1;
+  Triangle T2;
+
+  Eigen::Vector3d D;           // Direction of the intersecting line 
   int i0, i1, inot;             // Indexes
   int collisionIndicator;
-  
+
+  /* Value that indicates the admitted tolerance for coplanarity
+     If the distance from a vertex of Ti to the plane of Tj is smaller than this value,
+     it is assumed that the vertex lies in the plane  */
+  double coplanar_tolerance;   
+
   /* --- Internal Functions --- */
   void defaultInit( void );
-  void computeIntervals(double VV[3], double DD[3], double D0D1, double D0D2, 
-			double isect[2], bool &coplanar);
-  void find_t(double VV0, double VV1, double VV2, double D0, double D1, double D2,
-	      double isect[2]);
-  bool coplanar_tri_tri(double N[3]);
-  bool edge_against_tri_edges(double v0[3], double v1[3]);
-  bool edge_edge_test(double v0[3], double u0[3], double u1[3], double Ax, double Ay);
-  bool point_in_tri(double v0[3], double u0[3], double u1[3], double u2[3]);
-  
-  int compute_intervals_isectline(int id, double VV[3], double DD[3],
-				  double D0D1,double D0D2,double *isect0, double *isect1,
-				  double isectpoint0[3],double isectpoint1[3]);
-  void isect2(double VTX0[3], double VTX1[3], double VTX2[3], double VV0, double VV1, double VV2,
-	      double D0,double D1,double D2,double *isect0,double *isect1,double isectpoint0[3],double isectpoint1[3]);
+  bool coplanar_tri_tri(Vector3d N);
+  bool edge_against_tri_edges(Vector3d v0, Vector3d v1);
+  bool edge_edge_test(Vector3d v0, Vector3d u0, Vector3d u1, double Ax, double Ay);
+  bool point_in_tri(Vector3d v0, Vector3d u0, Vector3d u1, Vector3d u2);
+  int compute_intervals_isectline(int id, Vector3d VV, Vector3d DD,
+				  double D0D1, double D0D2, Vector2d &isect,
+				  Vector3d &isectpoint0, Vector3d &isectpoint1);
+  void isect2(Vector3d VTX0, Vector3d VTX1, Vector3d VTX2, 
+	      double VV1, double VV2, double VV3, double D0,double D1,double D2,
+	      Vector2d &isect, Vector3d &isectpoint0, Vector3d &isectpoint1); 
 
   
 };
