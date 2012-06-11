@@ -68,7 +68,16 @@ defaultInit( void )
 {
   D << 0, 0, 0;
   i0=0, i1=0, inot=0; collisionIndicator=0;
-  coplanar_tolerance = 0.0005;   // 0.5mm
+  //coplanar_tolerance = 0.0005;           // 0.5mm
+  coplanar_tolerance = 1e-10;
+}
+
+
+/* --- Set the value for the coplanar tolerance --- */
+void CollisionTwoTriangles::
+setCoplanarTolerance(double tol)
+{
+  coplanar_tolerance = tol;
 }
 
 
@@ -87,7 +96,6 @@ void CollisionTwoTriangles::
 setVerticesT1(Vector3d V1in, Vector3d V2in, Vector3d V3in)
 {
   T1.setVertices(V1in, V2in, V3in);
-  //V1=V1in; V2=V2in; V3=V3in;
 }
 
 
@@ -139,6 +147,13 @@ getVerticesT2(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out)
 }
 
 
+/* --- Get the value of the coplanar tolerance --- */
+void CollisionTwoTriangles::
+getCoplanarTolerance(double & tol)
+{
+  tol = coplanar_tolerance;
+}
+
 
 /*==============================================================================
          --------- MAIN COMPUTATION OF THE INTERSECTION -------------------
@@ -166,7 +181,7 @@ computeTTintersections( void )
   /* Compute the plane equation of triangle T1 (V1,V2,V3) */
   /*   plane equation 1: N1.X+d1=0                        */
   N1 = (T1.v2 - T1.v1).cross(T1.v3 - T1.v1);
-  d1 = -N1.dot(T1.v1);     //d1 = -dot(N1,V1);   
+  d1 = -N1.dot(T1.v1);   
 
   /* Put the vertices of T2 into the plane of T1 to compute the signed distances to the plane of T1
      distT2: distance from the vertices of T2 to the plane of T1 */

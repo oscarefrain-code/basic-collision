@@ -98,6 +98,10 @@ class CollisionTwoTriangles
   void setVerticesT1(Vector3d V1in, Vector3d V2in, Vector3d V3in);
   void setVerticesT2(Vector3d V1in, Vector3d V2in, Vector3d V3in);
 
+  /* -- Set and get the coplanar tolerance -- */
+  void setCoplanarTolerance(double tol);
+  void getCoplanarTolerance(double &tol);
+
   /* -- Get the values of the vertices -- */
   void getVerticesT1(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out);
   void getVerticesT2(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out);

@@ -28,7 +28,7 @@
 #include <iostream>
 
 
-/* --- Constructors --- */
+/* ------------------ Constructors ------------------------- */
 CollisionTwoBoxes::
 CollisionTwoBoxes( void )
 {
@@ -67,7 +67,7 @@ getTolerance( void )
 }
 
 
-/* --- Set values for the box --- */
+/* ----------------- Set values for the box ---------------- */
 void CollisionTwoBoxes::
 setLengthB1(double lx1, double ly1, double lz1)
 {
@@ -81,11 +81,15 @@ setLengthB2(double lx2, double ly2, double lz2)
   B2.setLength(lx2, ly2, lz2);
 }
 
+
+/* ------------------ Get values from the box--------------- */
+
 void CollisionTwoBoxes::
 getLengthB1(double & lx1, double & ly1, double & lz1)
 {
   B1.getLength(lx1, ly1, lz1);
 }
+
 
 void CollisionTwoBoxes::
 getLengthB2(double & lx2, double & ly2, double & lz2)
@@ -93,8 +97,38 @@ getLengthB2(double & lx2, double & ly2, double & lz2)
   B2.getLength(lx2, ly2, lz2);
 }
 
+void CollisionTwoBoxes::
+getTransformation1(Matrix3d &Rout, Vector3d &Tout)
+{
+  B1.getTransformation(Rout, Tout);
+}
+ 
 
-/* --- Set the transformations for the boxes --- */ 
+void CollisionTwoBoxes::
+getTransformation2(Matrix3d &Rout, Vector3d &Tout)
+{
+  B2.getTransformation(Rout, Tout);
+}
+
+
+void CollisionTwoBoxes::
+getVerticesB1(Vector3d &V1, Vector3d &V2, Vector3d &V3, Vector3d &V4,
+	      Vector3d &V5, Vector3d &V6, Vector3d &V7, Vector3d &V8)
+{
+  B1.getVertices(V1, V2, V3, V4, V5, V6, V7, V8);
+}
+
+
+void CollisionTwoBoxes::
+getVerticesB2(Vector3d &V1, Vector3d &V2, Vector3d &V3, Vector3d &V4,
+	      Vector3d &V5, Vector3d &V6, Vector3d &V7, Vector3d &V8)
+{
+  B2.getVertices(V1, V2, V3, V4, V5, V6, V7, V8);
+}
+
+
+/* -------- Set the transformations for the boxes ---------- */
+
 void CollisionTwoBoxes::
 setTransformation1(Matrix3d R1, Vector3d T1)
 {
@@ -194,7 +228,8 @@ setTransformation2( Matrix3d R2, Vector3d T2 )
 }
 
 
-/* -- Calculate the collisions --- */
+/* -------------- Calculate the collisions ----------------- */
+
 int CollisionTwoBoxes::
 computeBBintersections( void )
 {
@@ -365,7 +400,7 @@ computeBBintersections( void )
 
   }
 
-  prunePoints(pointsBB);
+  //prunePoints(pointsBB);
   averageSimilarValues();
 
   return collisionIndicator;
@@ -395,19 +430,16 @@ averageSimilarValues( void )
 }
 
 
+/* ----------------- PRINT INFORMATION --------------------- */
 
-/* --- Print Different Information --- */
 void CollisionTwoBoxes::
 printLengths( void )
 {
-  // std::cout << "Length: Box 1 = (" << B1.Lx << ", " << B1.Ly << ", " << B1.Lz << " ),   "
-  // 	    << "Box 2 = (" << B2.Lx << ", " << B2.Ly << ", " << B2.Lz << " )" << std::endl;
   std::cout << "Length box1: "; B1.printLengths();
   std::cout << "Length box2: "; B2.printLengths();
 }
 
 
-/* --- Print verbose information relative to the collision --- */
 void CollisionTwoBoxes::
 printBBcollisionInformation( void )
 {
@@ -416,6 +448,7 @@ printBBcollisionInformation( void )
     for (int i=0; i<pointsBB.size(); i++){
       std::cout << "  (" << pointsBB[i].transpose() << ")  ";
     }
+    std::cout << std::endl;
   }
   else{
     std::cout << "Result: Boxes are NOT intersecting" << std::endl;
@@ -423,7 +456,6 @@ printBBcollisionInformation( void )
 }
 
 
-/* --- Print vertices of the boxes  --- */
 void CollisionTwoBoxes::
 printBoxesVertices( void )
 {
@@ -433,20 +465,10 @@ printBoxesVertices( void )
 }
 
 
-/* --- Get Vertices of the boxes --- */
-// void CollisionTwoBoxes::
-// getVerticesB1(double V1[3], double V2[3], double V3[3], double V4[3],
-// 	      double V5[3], double V6[3], double V7[3], double V8[3])
-// {
-//   set(V1, Pw11); set(V2, Pw12); set(V3, Pw13); set(V4, Pw14);
-//   set(V5, Pw15); set(V6, Pw16); set(V7, Pw17); set(V8, Pw18);
-// }
+void CollisionTwoBoxes::
+printTransformation( void )
+{
+  std::cout << "Transformation box 1: " << std::endl; B1.printTransformation();
+  std::cout << "Transformation box 2: " << std::endl; B2.printTransformation();
+}
 
-
-// void CollisionTwoBoxes::
-// getVerticesB2(double V1[3], double V2[3], double V3[3], double V4[3],
-// 	      double V5[3], double V6[3], double V7[3], double V8[3])
-// {
-//   set(V1, Pw21); set(V2, Pw22); set(V3, Pw23); set(V4, Pw24);
-//   set(V5, Pw25); set(V6, Pw26); set(V7, Pw27); set(V8, Pw28);
-// }

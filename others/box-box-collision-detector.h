@@ -71,6 +71,10 @@ namespace dynamicgraph {
 	  DECLARE_SIGNAL_OUT(tolerance, double);
 	  DECLARE_SIGNAL_OUT(inContact, int);
 	  DECLARE_SIGNAL_OUT(contactPoints, ml::Matrix);
+	  DECLARE_SIGNAL_OUT(transformationOut1, ml::Matrix);
+	  DECLARE_SIGNAL_OUT(transformationOut2, ml::Matrix);	  
+	  DECLARE_SIGNAL_OUT(verticesB1, ml::Matrix);
+	  DECLARE_SIGNAL_OUT(verticesB2, ml::Matrix);	  
 
 	  /* --- COMMANDS --- */
 	  void setTolerance( const double & toleranceValue);
@@ -89,13 +93,12 @@ namespace dynamicgraph {
 	  /* --- Helper Printing functions --- */
 	  //void printRotTrans(double R[9], double T[3]);
 	  void printRotTrans(Eigen::Matrix3d R, Eigen::Vector3d T );
-
 	  void printLengths(const ml::Vector & length);
-	  //void setRTfromM(double R[9], double T[3], const ml::Matrix & M);
 	  void setRTfromM(Eigen::Matrix3d &R, Eigen::Vector3d &T, const ml::Matrix & M);
+	  void setMfromRT(ml::Matrix & mlM, Eigen::Matrix3d R, Eigen::Vector3d T);
 
 
-	}; // class BoxesCollisionDetector
+	}; // class BoxBoxCollisionDetector
 
     } // namespace dyninv
   } // namespace sot

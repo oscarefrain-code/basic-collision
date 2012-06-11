@@ -1,0 +1,77 @@
+[global]
+version: 1.6
+background=.9,.9,1
+
+[object floor]
+geometry: $HOME/.robotviewer/danceFloor.wrl
+position: 0 0 0 0 0 0
+
+[object obstacle]
+geometry: $HOME/.robotviewer/obstacle.py
+position: 0.3 -0.09 -1 0 0 0
+
+[object boxRF]
+geometry: $HOME/.robotviewer/boxRF.py
+position: 0 0 -1 0 0 0
+
+[object point1]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point2]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point3]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point4]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point5]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point6]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point7]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point8]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point9]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point10]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point11]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point12]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point13]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point14]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point15]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point16]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point17]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point18]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point19]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+[object point20]
+geometry: $HOME/.robotviewer/collision.py
+position: 0 0 -1 0 0 0
+

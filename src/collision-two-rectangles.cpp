@@ -179,8 +179,8 @@ computeRRintersections( void )
       pointsRR.push_back(scene4.pointsTT[i]);
   }
 
-  prunePoints(pointsRR);
-  convexHull(pointsRR);
+  //prunePoints(pointsRR);
+  //convexHull(pointsRR);
 
   return collisionIndicator;
 }

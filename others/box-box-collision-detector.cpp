@@ -20,6 +20,8 @@
 #include <sot/core/debug.hh>
 #include <dynamic-graph/factory.h>
 
+#include <vector>
+
 namespace dynamicgraph
 {
   namespace sot
@@ -41,15 +43,26 @@ namespace dynamicgraph
       BoxBoxCollisionDetector::
       BoxBoxCollisionDetector( const std::string & name )
 	: Entity(name)
-	,scene()
+	  ,scene()
 	,CONSTRUCT_SIGNAL_OUT(tolerance, double, sotNOSIGNAL)
 	,CONSTRUCT_SIGNAL_OUT(inContact, int, sotNOSIGNAL)
 	,CONSTRUCT_SIGNAL_OUT(contactPoints, ml::Matrix,
 			      inContactSOUT)
+	,CONSTRUCT_SIGNAL_OUT(transformationOut1, ml::Matrix, sotNOSIGNAL)
+	,CONSTRUCT_SIGNAL_OUT(transformationOut2, ml::Matrix, sotNOSIGNAL)	  
+	,CONSTRUCT_SIGNAL_OUT(verticesB1, ml::Matrix, sotNOSIGNAL)
+	,CONSTRUCT_SIGNAL_OUT(verticesB2, ml::Matrix, sotNOSIGNAL)
+
       {
-	signalRegistration(toleranceSOUT << inContactSOUT << contactPointsSOUT ); 
+	signalRegistration(toleranceSOUT << inContactSOUT << contactPointsSOUT
+			   << transformationOut1SOUT << transformationOut2SOUT
+			   << verticesB1SOUT << verticesB2SOUT ); 
 	toleranceSOUT.setNeedUpdateFromAllChildren( true );
 	inContactSOUT.setNeedUpdateFromAllChildren( true );
+	transformationOut1SOUT.setNeedUpdateFromAllChildren( true );
+	transformationOut2SOUT.setNeedUpdateFromAllChildren( true );
+	verticesB1SOUT.setNeedUpdateFromAllChildren( true );
+	verticesB2SOUT.setNeedUpdateFromAllChildren( true );
 	// contactPointsSOUT.setNeedUpdateFromAllChildren( true );
 	initCommands();
       }
@@ -106,7 +119,6 @@ namespace dynamicgraph
       addBox1( const ml::Vector & len,
 	       const ml::Matrix & M)
       {
-	//double R[9], T[3];   // Rotation and translation matrices
 	Eigen::Matrix3d R;
 	Eigen::Vector3d T;
 	setRTfromM(R, T, M);
@@ -123,7 +135,6 @@ namespace dynamicgraph
       addBox2( const ml::Vector & len,
 	       const ml::Matrix & M)
       {
-	//double R[9], T[3];   // Rotation and translation matrices
 	Eigen::Matrix3d R;
 	Eigen::Vector3d T;
 	setRTfromM(R, T, M);
@@ -139,7 +150,6 @@ namespace dynamicgraph
       void BoxBoxCollisionDetector::
       setTransformationB1( const ml::Matrix & M)
       {
-	//double R[9], T[3];   // Rotation and translation matrices
 	Eigen::Matrix3d R;
 	Eigen::Vector3d T;
 	setRTfromM(R, T, M);
@@ -152,7 +162,6 @@ namespace dynamicgraph
       void BoxBoxCollisionDetector::
       setTransformationB2( const ml::Matrix & M)
       {
-	//double R[9], T[3];   // Rotation and translation matrices
 	Eigen::Matrix3d R;
 	Eigen::Vector3d T;
 	setRTfromM(R, T, M);
@@ -204,7 +213,77 @@ namespace dynamicgraph
 	    mlpoints(i,2) = scene.pointsBB[i](2);
 	  }
 	}
-      	return mlpoints;
+	return mlpoints;
+      }
+
+
+      ml::Matrix& BoxBoxCollisionDetector::
+      transformationOut1SOUT_function( ml::Matrix& mlM1out, int t )
+      {
+	Eigen::Matrix3d R;
+	Eigen::Vector3d T;
+
+	mlM1out.resize(4,4);
+	scene.getTransformation1(R, T);
+	setMfromRT(mlM1out, R, T);
+	return mlM1out;
+      }
+
+
+      ml::Matrix& BoxBoxCollisionDetector::
+      transformationOut2SOUT_function( ml::Matrix& mlM2out, int t )
+      {
+	Eigen::Matrix3d R;
+	Eigen::Vector3d T;
+	scene.getTransformation2(R, T);
+
+	mlM2out.resize(4,4);
+	setMfromRT(mlM2out, R, T);
+	return mlM2out;
+      }
+
+
+      ml::Matrix& BoxBoxCollisionDetector::
+      verticesB1SOUT_function( ml::Matrix& mlVert, int t )
+      {
+	Eigen::Vector3d v1, v2, v3, v4, v5, v6, v7, v8;
+	scene.getVerticesB1(v1, v2, v3, v4, v5, v6, v7, v8);
+
+	mlVert.resize(8,3);
+	for (int i=0; i<3; i++)
+	  {
+	    mlVert(0,i) = v1(i);
+	    mlVert(1,i) = v2(i);
+	    mlVert(2,i) = v3(i);
+	    mlVert(3,i) = v4(i);
+	    mlVert(4,i) = v5(i);
+	    mlVert(5,i) = v6(i);
+	    mlVert(6,i) = v7(i);
+	    mlVert(7,i) = v8(i);
+	  }
+	return mlVert;
+      }
+
+
+      ml::Matrix& BoxBoxCollisionDetector::
+      verticesB2SOUT_function( ml::Matrix& mlVert, int t )
+      {
+	Eigen::Vector3d v1, v2, v3, v4, v5, v6, v7, v8;
+	scene.getVerticesB2(v1, v2, v3, v4, v5, v6, v7, v8);
+
+	mlVert.resize(8,3);
+	for (int i=0; i<3; i++)
+	  {
+	    mlVert(0,i) = v1(i);
+	    mlVert(1,i) = v2(i);
+	    mlVert(2,i) = v3(i);
+	    mlVert(3,i) = v4(i);
+	    mlVert(4,i) = v5(i);
+	    mlVert(5,i) = v6(i);
+	    mlVert(6,i) = v7(i);
+	    mlVert(7,i) = v8(i);
+	  }
+	return mlVert;
       }
 
 
@@ -246,6 +325,15 @@ namespace dynamicgraph
 	R(1,0) = M(1,0); R(1,1) = M(1,1); R(1,2) = M(1,2);
 	R(2,0) = M(2,0); R(2,1) = M(2,1); R(2,2) = M(2,2);
 	T(0) = M(0,3); T(1) = M(1,3); T(2) = M(2,3);
+      }
+
+      void BoxBoxCollisionDetector::
+      setMfromRT(ml::Matrix & mlM, Eigen::Matrix3d R, Eigen::Vector3d T)
+      {
+	mlM(0,0) = R(0,0); mlM(0,1) = R(0,1); mlM(0,2) = R(0,2); mlM(0,3) = T(0);
+	mlM(1,0) = R(1,0); mlM(1,1) = R(1,1); mlM(1,2) = R(1,2); mlM(1,3) = T(1);
+	mlM(2,0) = R(2,0); mlM(2,1) = R(2,1); mlM(2,2) = R(2,2); mlM(2,3) = T(2);
+	mlM(3,0) =    0.0; mlM(3,1) =    0.0; mlM(3,2) =    0.0; mlM(3,3) =  1.0;
       }
 
       void BoxBoxCollisionDetector::

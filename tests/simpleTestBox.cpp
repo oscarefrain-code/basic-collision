@@ -98,6 +98,8 @@ int main( void )
   collisionDetected = scene.computeBBintersections();
   scene.printBoxesVertices();
   scene.printLengths();
+  scene.printTransformation();
+
   scene.printBBcollisionInformation();
   std::cout << std::endl;
 
