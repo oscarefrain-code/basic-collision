@@ -35,12 +35,7 @@ CollisionOneManyBoxes( void )
   id = 0;
   // Initialize the values to an arbitrary default
   Lx1=0.0; Ly1=0.0; Lz1=0.0;
-  R1.setIdentity();
-  T1.setZero();
-  // R1[0]=1.0; R1[1]=0.0; R1[2]=0.0;
-  // R1[3]=0.0; R1[4]=1.0; R1[5]=0.0;
-  // R1[6]=0.0; R1[7]=0.0; R1[8]=1.0;
-  // T1[0]=0.0; T1[1]=0.0; T1[2]=0.0;
+  R1.setIdentity();  T1.setZero();
   tolerance = 0.0005;         //TRI_EPSILON;
   collisionIndicator = 0;
 }
