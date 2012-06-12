@@ -17,10 +17,11 @@
  ************************************************************************************/
 
 /*
- * Triangle/triangle intersection test
+ * Detect the minimal intersection points between two triangles
  * Based on the paper:
  *     Thomas Moller, "A Fast Triangle-Triangle Intersection Test",
  *     Journal of Graphics Tools, 2(2), 1997
+ *     Adapted from: http://jgt.akpeters.com/papers/Moller97/tritri.html
  *
  */
 

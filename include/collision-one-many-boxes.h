@@ -43,8 +43,8 @@ public OperationsHelper
   /* -- Set values -- */
   void setTolerance(double toler);
   void setLengthB1(double lx1, double ly1, double lz1);
-  void setTransformationB1(double R[9], double T[3]);
-  int addBox(double lx, double ly, double lz, double R[9], double T[3]);
+  void setTransformationB1(Matrix3d R, Vector3d T);
+  int addBox(double lx, double ly, double lz, Matrix3d R, Vector3d T);
 
   /* -- Compute the collision detection -- */
   int computeIntersections( void );
@@ -54,18 +54,18 @@ public OperationsHelper
   void getLengthB1(double & lx1, double & ly1, double & lz1);
 
   /* --- Print Different Information --- */
-  void printBBsCollisionInformation( void );
   void printLengths( void );
   void printBoxesVertices( void );
+  void printBBsCollisionInformation( void );
 
   /* -- Collision Points -- */
-  std::vector<Point3d> pointsBBs;
+  std::vector<Vector3d> pointsBBs;
   std::vector<CollisionTwoBoxes> collisionBoxes;
 
  private:
   double Lx1, Ly1, Lz1;
-  double R1[9], T1[3];
-  double tolerance;
+  Matrix3d R1; Vector3d T1;
+  double tolerance;    // Tolerance to average the close points in collision-two-boxes
   int id, collisionIndicator;
 
 };

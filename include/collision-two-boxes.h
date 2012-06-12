@@ -176,7 +176,7 @@ class CollisionTwoBoxes
   /* -- Variables -- */
   Box B1, B2;
   int collisionIndicator;
-  double tolerance;
+  double tolerance;   // Tolerance to average the close points
 
   /* -- Collision rect/rect objects -- */
   CollisionTwoRectangles To1_To2, To1_Bo2, To1_Le2, To1_Ri2, To1_Fr2, To1_Ba2,

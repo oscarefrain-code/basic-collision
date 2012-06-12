@@ -13,7 +13,7 @@ ADD_LIBRARY( BasicCollision SHARED
   src/collision-two-triangles.cpp
   src/collision-two-rectangles.cpp
   src/collision-two-boxes.cpp
-  #src/collision-one-many-boxes.cpp
+  src/collision-one-many-boxes.cpp
   )
 
 

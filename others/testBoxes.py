@@ -16,6 +16,7 @@ from dynamic_graph.script_shortcuts import optionalparentheses
 
 from ThreadInterruptibleLoop import *
 from time import sleep
+from numpy import *
 import robotviewer
 
 
@@ -36,20 +37,24 @@ def next(): inc()
 # -------------------------------------------------------------------
 # Initial position for the boxes
 pbox1 = [0,0,0.1/2]; 
-pbox2 = [0,0.05,0.1+0.024/2];
+pbox2 = [0,0.05,0.1+0.024/2+0.06];
 
 # Start the collision detector box to box
 scene = BoxBoxCollisionDetector('scene')
-scene.setTolerance(0.0001)
+scene.setTolerance(0.002)
 scene.addBox1((0.19, 0.115, 0.10),
               ((1.,0.,0.,pbox1[0]),(0.,1.,0.,pbox1[1]),(0.,0.,1.,pbox1[2]),(0.,0.,0.,1.)) )
+# scene.addBox2((0.23, 0.135, 0.024),
+#               ((1.,0.,0.,pbox2[0]),(0.,1.,0.,pbox2[1]),(0.,0.,1.,pbox2[2]),(0.,0.,0.,1.)) )
+a=30.0/180.0*pi; ca=cos(a); sa=sin(a)
 scene.addBox2((0.23, 0.135, 0.024),
-              ((1.,0.,0.,pbox2[0]),(0.,1.,0.,pbox2[1]),(0.,0.,1.,pbox2[2]),(0.,0.,0.,1.)) )
+              ((ca,0.,sa,pbox2[0]),(0.,1.,0.,pbox2[1]),(-sa,0.,ca,pbox2[2]),(0.,0.,0.,1.)) )
+
 
 # Set the initial positions to robot-viewer
 viewer = robotviewer.client('XML-RPC')
 viewer.updateElementConfig('obstacle', [ pbox1[0], pbox1[1], pbox1[2], 0, 0, 0])
-viewer.updateElementConfig('boxRF',    [ pbox2[0], pbox2[1], pbox2[2], 0, 0, 0])
+viewer.updateElementConfig('boxRF',    [ pbox2[0], pbox2[1], pbox2[2], 0, a, 0])
 # Hide all the contact points (under the ground)
 MaxPt = 20
 for i in range(MaxPt):
@@ -85,6 +90,19 @@ def translateB2(dp, time):
     M[2][3]+=dp[2]
     M = ( tuple(M[0]), tuple(M[1]), tuple(M[2]), tuple(M[3]) )
     scene.setTransformationB2(M)
+    viewer.updateElementConfig('boxRF', [ M[0][3], M[1][3], M[2][3], 0, a, 0])
+
+# Translate and rotate one object
+def moveB2(dp, time):
+    ''' dp = [delta_x, delta_y, delta_z, delta_roll, delta_pitch, delta_yaw] '''
+    scene.transformationOut2.recompute(time)
+    M = scene.transformationOut2.value 
+    M = [list(M[0]), list(M[1]), list(M[2]), list(M[3])]
+    M[0][3]+=dp[0]
+    M[1][3]+=dp[1]
+    M[2][3]+=dp[2]
+    M = ( tuple(M[0]), tuple(M[1]), tuple(M[2]), tuple(M[3]) )
+    scene.setTransformationB2(M)
     viewer.updateElementConfig('boxRF', [ M[0][3], M[1][3], M[2][3], 0, 0, 0])
 
 
@@ -107,7 +125,7 @@ def inc():
     global t; t+=1
     sleep(0.005)
     #translateB2([0,0,-0.001], t)
-    translateB2([0,0,-0.0005], t)
+    translateB2([0,0,-0.0001], t)
     showCollision(t)
     #showVertices(2, t)
 

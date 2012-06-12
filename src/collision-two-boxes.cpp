@@ -238,49 +238,51 @@ computeBBintersections( void )
   /* Clear the possible 'previous' contact points */
   pointsBB.clear();
 
-  collisions[0] = To1_To2.computeRRintersections(); // Y
+  collisions[0] = To1_To2.computeRRintersections(); // 
   collisions[1] = To1_Bo2.computeRRintersections(); //
-  collisions[2] = To1_Le2.computeRRintersections(); // 
-  collisions[3] = To1_Ri2.computeRRintersections(); // Y
+  collisions[2] = To1_Le2.computeRRintersections(); // Y
+  collisions[3] = To1_Ri2.computeRRintersections(); // 
   collisions[4] = To1_Fr2.computeRRintersections(); // 
-  collisions[5] = To1_Ba2.computeRRintersections();
+  collisions[5] = To1_Ba2.computeRRintersections(); //
 
-  collisions[6]  = Bo1_To2.computeRRintersections(); // Y
-  collisions[7]  = Bo1_Bo2.computeRRintersections();
-  collisions[8]  = Bo1_Le2.computeRRintersections();
-  collisions[9]  = Bo1_Ri2.computeRRintersections(); // Y
-  collisions[10] = Bo1_Fr2.computeRRintersections();
-  collisions[11] = Bo1_Ba2.computeRRintersections();
+  collisions[6]  = Bo1_To2.computeRRintersections(); //
+  collisions[7]  = Bo1_Bo2.computeRRintersections(); //
+  collisions[8]  = Bo1_Le2.computeRRintersections(); //
+  collisions[9]  = Bo1_Ri2.computeRRintersections(); //
+  collisions[10] = Bo1_Fr2.computeRRintersections(); //
+  collisions[11] = Bo1_Ba2.computeRRintersections(); //
 
-  collisions[12] = Le1_To2.computeRRintersections();
-  collisions[13] = Le1_Bo2.computeRRintersections();
-  collisions[14] = Le1_Le2.computeRRintersections();
-  collisions[15] = Le1_Ri2.computeRRintersections();
-  collisions[16] = Le1_Fr2.computeRRintersections();
-  collisions[17] = Le1_Ba2.computeRRintersections();
+  collisions[12] = Le1_To2.computeRRintersections(); //
+  collisions[13] = Le1_Bo2.computeRRintersections(); //
+  collisions[14] = Le1_Le2.computeRRintersections(); //
+  collisions[15] = Le1_Ri2.computeRRintersections(); //
+  collisions[16] = Le1_Fr2.computeRRintersections(); //
+  collisions[17] = Le1_Ba2.computeRRintersections(); //
 
-  collisions[18] = Ri1_To2.computeRRintersections();
-  collisions[19] = Ri1_Bo2.computeRRintersections(); //
-  collisions[20] = Ri1_Le2.computeRRintersections();
-  collisions[21] = Ri1_Ri2.computeRRintersections();
+  collisions[18] = Ri1_To2.computeRRintersections(); //
+  collisions[19] = Ri1_Bo2.computeRRintersections(); // Y
+  collisions[20] = Ri1_Le2.computeRRintersections(); //
+  collisions[21] = Ri1_Ri2.computeRRintersections(); //
   collisions[22] = Ri1_Fr2.computeRRintersections(); //
-  collisions[23] = Ri1_Ba2.computeRRintersections();
+  collisions[23] = Ri1_Ba2.computeRRintersections(); //
 
-  collisions[24] = Fr1_To2.computeRRintersections(); // Y
-  collisions[25] = Fr1_Bo2.computeRRintersections();
-  collisions[26] = Fr1_Le2.computeRRintersections();
-  collisions[27] = Fr1_Ri2.computeRRintersections();
-  collisions[28] = Fr1_Fr2.computeRRintersections();
-  collisions[29] = Fr1_Ba2.computeRRintersections();
+  collisions[24] = Fr1_To2.computeRRintersections(); // 
+  collisions[25] = Fr1_Bo2.computeRRintersections(); // Y
+  collisions[26] = Fr1_Le2.computeRRintersections(); // Y
+  collisions[27] = Fr1_Ri2.computeRRintersections(); //
+  collisions[28] = Fr1_Fr2.computeRRintersections(); //
+  collisions[29] = Fr1_Ba2.computeRRintersections(); //
 
-  collisions[30] = Ba1_To2.computeRRintersections();
-  collisions[31] = Ba1_Bo2.computeRRintersections(); // 
-  collisions[32] = Ba1_Le2.computeRRintersections(); // 
-  collisions[33] = Ba1_Ri2.computeRRintersections();
-  collisions[34] = Ba1_Fr2.computeRRintersections();
-  collisions[35] = Ba1_Ba2.computeRRintersections();
+  collisions[30] = Ba1_To2.computeRRintersections(); //
+  collisions[31] = Ba1_Bo2.computeRRintersections(); // Y
+  collisions[32] = Ba1_Le2.computeRRintersections(); // Y
+  collisions[33] = Ba1_Ri2.computeRRintersections(); //
+  collisions[34] = Ba1_Fr2.computeRRintersections(); //
+  collisions[35] = Ba1_Ba2.computeRRintersections(); //
 
   // Collision detected? (yes:1, no:0)
+  // collisionIndicator = collisions[0] || collisions[1] || collisions[2] ||
+  //   collisions[3] || collisions[4] || collisions[5];
   collisionIndicator = collisions[0] || collisions[1] || collisions[2] ||
     collisions[3] || collisions[4] || collisions[5] || collisions[6] ||
     collisions[7] || collisions[8] || collisions[9] || collisions[10] ||
@@ -293,6 +295,7 @@ computeBBintersections( void )
     collisions[35];
 
   // std::cout << "Collisions : ";
+  // //for (int i=0; i<6; i++)
   // for (int i=0; i<36; i++)
   //   std::cout << collisions[i] << " ";
   // std::cout << std::endl;
@@ -400,7 +403,7 @@ computeBBintersections( void )
 
   }
 
-  //prunePoints(pointsBB);
+  prunePoints(pointsBB);
   averageSimilarValues();
 
   return collisionIndicator;
