@@ -147,7 +147,7 @@ convexHull( std::vector<Vector3d>& points )
   */
   if (!normal_not_zero)
     {
-      // std::cout << "Some points are collinear (convex hull function)" << std::endl;
+      //std::cout << "Some points are collinear (convex hull function)" << std::endl;
       int ind=0;                // Index for v1 (and the other vectors)
       int imax=0, imin=0;       // Indexes corresponding to the max and min of 't'
       //double tmax=0, tmin=0;    // Maximum and minimum values of 't' (initially 0 since P=p1)
@@ -190,12 +190,13 @@ convexHull( std::vector<Vector3d>& points )
     }
   
 
-  /* Project onto an axis-aligned plane that maximizs the area of the polygon: compute indexes */
+  /* Project onto an axis-aligned plane that maximizes the area of the polygon: compute indexes */
   // Discard the largest normal component
   //double absN[3];
   Vector3d absN;
   int x, y, inot;
   absN(0) = fabs(normal(0)); absN(1)=fabs(normal(1)); absN(2)=fabs(normal(2));
+
   if( absN(0)>absN(1) ) {
     if( absN(0)>absN(2) ) {
       x=1; y=2;  inot=0;     /* absN[0] is greatest */
@@ -212,18 +213,35 @@ convexHull( std::vector<Vector3d>& points )
       x=0; y=2;  inot=1;     /* absN[1] is greatest */
     }
   }               
+
+  // /*  Find the minimum point in y direction */
+  // double ymin=points[0](y), imin=0;
   
-  /*  Find the minimum point in y direction */
-  double ymin=points[0](y), imin=0;
+  // for (int i=1; i<points.size(); i++) {
+  //   if (points[i](y) < ymin ){
+  //     ymin = points[i](y);
+  //     imin = i;
+  //   }
+  // }
+
+  /*  Find the minimum point in x and y direction  */
+  /*  Reason: if three points lie in the same line, the middle one can be picked and 
+      it can be considered as a necessary point for the convex hull, which is not 
+      true, since in that case, one of the two extremes should be considered, instead.
+      To avoid this, the min in y and also in x is found
+  */
+  double ymin=points[0](y), xmin=points[0](x), imin=0;
   
   for (int i=1; i<points.size(); i++) {
-    if (points[i](y) < ymin ){
-      ymin = points[i](y);
-      imin = i;
+    if (points[i](y) < ymin || fabs(points[i](y)-ymin)<=1e-5){
+      if(points[i](x) < xmin)
+	{ ymin = points[i](y);
+	  imin = i; 
+	}
     }
   }
 
-  //std::cout << "y: " << y << ", imin: " << imin << std::endl;
+  //std::cout << "y: " << y << ", ymin: " << ymin << ", (xmin=" << points[imin](x) << "), imin: " << imin << std::endl;
 
   /* Compute the angle as an estimator of the desired edge */
   /*    Starting with the minimum point in the 'x' direction, and assuming that
@@ -245,29 +263,31 @@ convexHull( std::vector<Vector3d>& points )
   do{
     //std::cout << "e1 = (" << e1[0] << ", " << e1[1] << ")\n";
     thmin = 7.0;
-    for (int j=0; j<points.size(); j++){
-      if (j==i) continue;    // for each j!=i
-      pi[0]=points[j](x); pi[1]=points[j](y);    // Point to test
-      //std::cout << "pi = (" << pi[0] << ", " << pi[1] << ")  ";
+    for (int j=0; j<points.size(); j++)
+      {
+	if (j==i) continue;    // for each j!=i
+	pi[0]=points[j](x); pi[1]=points[j](y);    // Point to test
+	//std::cout << "pi = (" << pi[0] << ", " << pi[1] << ")  ";
+	
+	e2[0]=pi[0]-p0[0]; e2[1]=pi[1]-p0[1];                        // edge from p0 to pi
+	//std::cout << "e2 = (" << e2[0] << ", " << e2[1] << ") ";
+	
+	mod_e2 = sqrt(e2[0]*e2[0]+e2[1]*e2[1]);                      // |e2|
+	th = acos( (e2[0]*e1[0]+e2[1]*e1[1])/(mod_e2*mod_e1) );      // theta
+	//std::cout << "  th = " << th << "  num: " << e2[0]*e1[0]+e2[1]*e1[1] << "  den: " << mod_e2*mod_e1 <<std::endl;
 
-      e2[0]=pi[0]-p0[0]; e2[1]=pi[1]-p0[1];                        // edge from p0 to pi
-      //std::cout << "e2 = (" << e2[0] << ", " << e2[1] << ") ";
-
-      mod_e2 = sqrt(e2[0]*e2[0]+e2[1]*e2[1]);                      // |e2|
-      th = acos( (e2[0]*e1[0]+e2[1]*e1[1])/(mod_e2*mod_e1) );      // theta
-      //std::cout << "  th = " << th << "  num: " << e2[0]*e1[0]+e2[1]*e1[1] << "  den: " << mod_e2*mod_e1 <<std::endl;
-
-      // If the angle of the previous edge with the next edge in the convex hull is zero, the current point lies
-      // in a line (is part of the segment), then, eliminate the last point added to the convex hull since it lied
-      // in the line. 
-      if (counter!=0 && th==0)
+	// If the angle of the previous edge with the next edge in the convex hull is zero, the current point lies
+	// in a line (is part of the segment), then, eliminate the last point added to the convex hull since it lied
+	// in the line. 
+	if (counter!=0 && th==0)
 	  interPointsRectCH.pop_back();
 
-      if (th<thmin){
-	thmin = th;
-	k = j;
+	if (th<thmin)
+	  {
+	    thmin = th;
+	    k = j;
+	  }
       }
-    }
     interPointsRectCH.push_back(points[k]);
     i=k;
     e1[0]=points[k](x)-p0[0]; e1[1]=points[k](y)-p0[1];
@@ -283,6 +303,7 @@ convexHull( std::vector<Vector3d>& points )
   // }
 
   points = interPointsRectCH;
+
   return 0;
 
 }

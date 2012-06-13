@@ -282,7 +282,7 @@ computeBBintersections( void )
 
   // Collision detected? (yes:1, no:0)
   // collisionIndicator = collisions[0] || collisions[1] || collisions[2] ||
-  //   collisions[3] || collisions[4] || collisions[5];
+  //   collisions[3] || collisions[4] || collisions[5] || collisions[6];
   collisionIndicator = collisions[0] || collisions[1] || collisions[2] ||
     collisions[3] || collisions[4] || collisions[5] || collisions[6] ||
     collisions[7] || collisions[8] || collisions[9] || collisions[10] ||
@@ -295,9 +295,12 @@ computeBBintersections( void )
     collisions[35];
 
   // std::cout << "Collisions : ";
-  // //for (int i=0; i<6; i++)
+  // //for (int i=0; i<12; i++)
   // for (int i=0; i<36; i++)
-  //   std::cout << collisions[i] << " ";
+  //   {
+  //     std::cout << collisions[i] << " ";
+  //     if ((i+1)%6 == 0) std::cout << " - ";
+  //   }
   // std::cout << std::endl;
   
   // for (int i=0; i<To1_To2.pointsRR.size(); i++)
