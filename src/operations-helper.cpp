@@ -24,6 +24,7 @@
 
 #include <operations-helper.h>
 
+using namespace Eigen;
 
 /* ---  Sort a,b so that a < = b  --- */
 /* smallest: initial smallest value  */

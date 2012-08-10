@@ -27,6 +27,7 @@
 #include <collision-two-rectangles.h>
 #include <iostream>
 
+using namespace Eigen;
 
 /* --- Constructor that initializes all the vertices to zero --- */
 CollisionTwoRectangles::
@@ -134,6 +135,8 @@ computeRRintersections( void )
   /* Clear the possible 'previous' contact points */
   pointsRR.clear();
 
+  printRectanglesVertices();
+
   /* Divide the rectangle/rectangle problem in 4 triangle/triangle problem  */
   CollisionTwoTriangles scene1(R1.v1, R1.v2, R1.v3, R2.v1, R2.v2, R2.v3);
   CollisionTwoTriangles scene2(R1.v1, R1.v2, R1.v3, R2.v3, R2.v4, R2.v1);
@@ -148,23 +151,19 @@ computeRRintersections( void )
   collisionIndicator = collisionTT[0] || collisionTT[1] ||
                        collisionTT[2] || collisionTT[3];
 
-  // std::cout << "Collisions : ";
-  // for (int i=0; i<4; i++)
-  //   std::cout << collisionTT[i] << " ";
-  // std::cout << std::endl;
+  std::cout << "Collisions : ";
+  for (int i=0; i<4; i++)
+    std::cout << collisionTT[i] << " ";
+  std::cout << std::endl;
 
   // for (int i=0; i<scene1.pointsTT.size(); i++)
-  //   scene1.pointsTT[i].print();
-  // std::cout << std::endl;
-  // for (int i=0; i<scene2.pointsTT.size(); i++)
-  //   scene2.pointsTT[i].print();
-  // std::cout << std::endl;
+  //   std::cout << "  (" << scene1.pointsTT[i].transpose() << ")  " << std::endl;
+  for (int i=0; i<scene2.pointsTT.size(); i++)
+    std::cout << "  (" << scene2.pointsTT[i].transpose() << ")  " << std::endl;
   // for (int i=0; i<scene3.pointsTT.size(); i++)
-  //   scene3.pointsTT[i].print();
-  // std::cout << std::endl;
+  //   std::cout << "  (" << scene3.pointsTT[i].transpose() << ")  " << std::endl;
   // for (int i=0; i<scene4.pointsTT.size(); i++)
-  //   scene4.pointsTT[i].print();
-  // std::cout << std::endl;
+  //   std::cout << "  (" << scene4.pointsTT[i].transpose() << ")  " << std::endl;
 
 
   /* Copy all the collision points in pointsRR  */
@@ -182,6 +181,10 @@ computeRRintersections( void )
   prunePoints(pointsRR);
   convexHull(pointsRR);
 
+  //TEST
+  //printRectanglesVertices();
+  printRRcollisionInformation();
+
   return collisionIndicator;
 }
 
@@ -195,6 +198,7 @@ printRRcollisionInformation( void )
     for (int i=0; i<pointsRR.size(); i++){
       std::cout << "  (" << pointsRR[i].transpose() << ")  ";
     }
+    std::cout << std::endl;
   }
   else{
     std::cout << "Result: Rectangles are NOT intersecting" << std::endl;

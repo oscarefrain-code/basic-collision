@@ -27,6 +27,8 @@
 #include <collision-one-many-boxes.h>
 #include <iostream>
 
+#include <Eigen/Dense>
+using namespace Eigen;
 
 /* -- Constructors -- */
 CollisionOneManyBoxes::
@@ -185,12 +187,12 @@ printBoxesVertices( void )
   for (int i=0; i<collisionBoxes.size(); i++){
     if (i==0) {
       collisionBoxes[i].getVerticesB1(V1, V2, V3, V4, V5, V6, V7, V8);
-      std::cout << "Vertices box 1: [" << V1 << "], [" << V2 << "], [" << V3 << "],[" << V4 << "],["
-		<< V5 << "], [" << V6 << "], [" << V7 << "],[" << V8 << "]" << std::endl;
+      std::cout << "Vertices box 1: [" << V1.transpose() << "], [" << V2.transpose() << "], [" << V3.transpose() << "],[" << V4.transpose() << "],["
+		<< V5.transpose() << "], [" << V6.transpose() << "], [" << V7.transpose() << "],[" << V8.transpose() << "]" << std::endl;
     }
     collisionBoxes[i].getVerticesB2(V1, V2, V3, V4, V5, V6, V7, V8);
-    std::cout << "Vertices box "<< i+2 << ": [" << V1 << "], [" << V2 << "], [" << V3 << "],[" << V4 << "],["
-	      << V5 << "], [" << V6 << "], [" << V7 << "],[" << V8 << "]" << std::endl;
+    std::cout << "Vertices box "<< i+2 << ": [" << V1.transpose() << "], [" << V2.transpose() << "], [" << V3.transpose() << "],[" << V4.transpose() << "],["
+	      << V5.transpose() << "], [" << V6.transpose() << "], [" << V7.transpose() << "],[" << V8.transpose() << "]" << std::endl;
   }
 
 }

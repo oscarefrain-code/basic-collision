@@ -25,6 +25,8 @@
 #include <iostream>
 #include <math.h>
 
+#include <Eigen/Dense>
+using namespace Eigen;
 
 void rotMatrix(Matrix3d &R, Vector3d axis, double angle);
 
@@ -35,26 +37,26 @@ int main( void )
   Matrix3d R1, R2;
   Vector3d T1, T2, axis;
 
-  CollisionTwoBoxes scene(4.0, 2.0, 1.0, 4.0, 2.0, 1.0);
-  scene.setTolerance(0.001);
+  // CollisionTwoBoxes scene(4.0, 2.0, 1.0, 4.0, 2.0, 1.0);
+  // scene.setTolerance(0.001);
 
-  axis << 1.0, 0.0, 0.0;
-  T1 << 2.0, 1.0, 0.5;
-  //T1[0]=-1.0; T1[1]=2.0; T1[2]=1.5;
-  rotMatrix(R1, axis, 0.0);
-  scene.setTransformation1(R1, T1);
+  // axis << 1.0, 0.0, 0.0;
+  // T1 << 2.0, 1.0, 0.5;
+  // //T1[0]=-1.0; T1[1]=2.0; T1[2]=1.5;
+  // rotMatrix(R1, axis, 0.0);
+  // scene.setTransformation1(R1, T1);
 
-  // Strange if T2[0]=-1 !!!! CHECK IT OUT !!!!
-  axis << 1.0, 0.0, 0.0;
+  // // Strange if T2[0]=-1 !!!! CHECK IT OUT !!!!
+  // axis << 1.0, 0.0, 0.0;
   
-  //T2[0]=2.0; T2[1]=1.0; T2[2]=2.5;
-  //T2[0]=4.0; T2[1]=2.0; T2[2]=1.5;
-  //T2[0]=-1.0; T2[1]=2.0; T2[2]=1.5;   
-  T2 << -0.5, 2.0, 1.5;   
-  //T2[0]=2.0; T2[1]=1.0; T2[2]=0.5;
-  //T2[0]=4.0; T2[1]=2.0; T2[2]=1.4999;
-  rotMatrix(R2, axis, 0.0);
-  scene.setTransformation2(R2, T2);
+  // //T2[0]=2.0; T2[1]=1.0; T2[2]=2.5;
+  // //T2[0]=4.0; T2[1]=2.0; T2[2]=1.5;
+  // //T2[0]=-1.0; T2[1]=2.0; T2[2]=1.5;   
+  // T2 << -0.5, 2.0, 1.5;   
+  // //T2[0]=2.0; T2[1]=1.0; T2[2]=0.5;
+  // //T2[0]=4.0; T2[1]=2.0; T2[2]=1.4999;
+  // rotMatrix(R2, axis, 0.0);
+  // scene.setTransformation2(R2, T2);
 
 
   //CollisionTwoBoxes scene(4.0, 2.0, 1.0, 4.0, 2.0, 1.0);
@@ -95,13 +97,29 @@ int main( void )
   // scene.setLengthB2(0.19, 0.115, 0.10);
   // scene.setTransformation2(R2, T2);
 
-  collisionDetected = scene.computeBBintersections();
-  scene.printBoxesVertices();
-  scene.printLengths();
-  scene.printTransformation();
+  CollisionTwoBoxes scene(0.23, 0.135, 0.024, 0.19, 0.115, 0.10);
+  scene.setTolerance(0.005);
 
-  scene.printBBcollisionInformation();
-  std::cout << std::endl;
+  R2 << 1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0;
+  T2 << 0.03, -0.13, 0.03;
+
+  R1 << 0.99999999999999978, 3.738479408160609e-09, 2.7267014987878495e-08,
+    -3.7384784942671144e-09, 0.99999999999999944, -3.3435310033084201e-08,
+    -2.7267015140377106e-08, 3.3435309937393195e-08, 0.99999999999999922;
+  T1 << -0.020860537574661286, -0.071387244448416889, 0.09200000535012888;
+
+  scene.setTransformation1(R1, T1);
+  scene.setTransformation2(R2, T2);
+
+  collisionDetected = scene.computeBBintersections();
+  // scene.printBoxesVertices();
+  // scene.printLengths();
+  // scene.printTransformation();
+
+  // scene.printBBcollisionInformation();
+  // std::cout << std::endl;3
 
   return 0;
 }

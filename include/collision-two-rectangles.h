@@ -38,27 +38,22 @@ class Rectangle
 {
  public:
   /* -- Vertices -- */
-  Vector3d v1;   
-  Vector3d v2;   
-  Vector3d v3;
-  Vector3d v4;
+  Eigen::Vector3d v1, v2, v3, v4;   
   /* -- Constructors -- */
   Rectangle()
     {
-      v1 << 0, 0, 0;
-      v2 << 0, 0, 0;
-      v3 << 0, 0, 0;
-      v4 << 0, 0, 0;
+      v1 << 0, 0, 0; v2 << 0, 0, 0;
+      v3 << 0, 0, 0; v4 << 0, 0, 0;
     }
-  Rectangle(Vector3d v1in, Vector3d v2in, Vector3d v3in, Vector3d v4in)
+  Rectangle(Eigen::Vector3d v1in, Eigen::Vector3d v2in, Eigen::Vector3d v3in, Eigen::Vector3d v4in)
     { 
       setVertices(v1in, v2in, v3in, v4in);
     }
   /* -- Functions -- */
-  void setVertices(Vector3d v1in, Vector3d v2in, Vector3d v3in, Vector3d v4in)
+  void setVertices(const Eigen::Vector3d v1in, const Eigen::Vector3d v2in, const Eigen::Vector3d v3in, const Eigen::Vector3d v4in)
   {  v1=v1in; v2=v2in; v3=v3in; v4=v4in;
   }
-  void getVertices(Vector3d &v1out, Vector3d &v2out, Vector3d &v3out, Vector3d &v4out)
+  void getVertices(Eigen::Vector3d &v1out, Eigen::Vector3d &v2out, Eigen::Vector3d &v3out, Eigen::Vector3d &v4out)
   {  v1out=v1; v2out=v2; v3out=v3; v4out=v4;
   }
   void print()
@@ -76,15 +71,15 @@ class CollisionTwoRectangles
  public:
    /* -- Constructors -- */
   CollisionTwoRectangles( void );
-  CollisionTwoRectangles(Vector3d R1_V0, Vector3d R1_V1, Vector3d R1_V2, Vector3d R1_V3,
-			 Vector3d R2_V0, Vector3d R2_V1, Vector3d R2_V2, Vector3d R2_V3);
+  CollisionTwoRectangles(Eigen::Vector3d R1_V0, Eigen::Vector3d R1_V1, Eigen::Vector3d R1_V2, Eigen::Vector3d R1_V3,
+			 Eigen::Vector3d R2_V0, Eigen::Vector3d R2_V1, Eigen::Vector3d R2_V2, Eigen::Vector3d R2_V3);
   CollisionTwoRectangles(Rectangle r1in, Rectangle r2in);
 
   /* -- Set values for the vertices (in succesive order, clockwise or anticlockwise) -- */
-  void setVerticesAll(Vector3d r1v1, Vector3d r1v2, Vector3d r1v3, Vector3d r1v4,
-		      Vector3d r2v1, Vector3d r2v2, Vector3d r2v3, Vector3d r2v4);
-  void setVerticesR1(Vector3d V1in, Vector3d V2in, Vector3d V3in, Vector3d V4in);
-  void setVerticesR2(Vector3d V1in, Vector3d V2in, Vector3d V3in, Vector3d V4in);
+  void setVerticesAll(Eigen::Vector3d r1v1, Eigen::Vector3d r1v2, Eigen::Vector3d r1v3, Eigen::Vector3d r1v4,
+		      Eigen::Vector3d r2v1, Eigen::Vector3d r2v2, Eigen::Vector3d r2v3, Eigen::Vector3d r2v4);
+  void setVerticesR1(Eigen::Vector3d V1in, Eigen::Vector3d V2in, Eigen::Vector3d V3in, Eigen::Vector3d V4in);
+  void setVerticesR2(Eigen::Vector3d V1in, Eigen::Vector3d V2in, Eigen::Vector3d V3in, Eigen::Vector3d V4in);
 
   /* -- Set the rectangles -- */
   void setRectangles(Rectangle r1in, Rectangle r2in);
@@ -92,8 +87,8 @@ class CollisionTwoRectangles
   void setRectangle2(Rectangle r2in);
 
   /* -- Get the values of the vertices -- */
-  void getVerticesR1(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out, Vector3d &V4out);
-  void getVerticesR2(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out, Vector3d &V4out);
+  void getVerticesR1(Eigen::Vector3d &V1out, Eigen::Vector3d &V2out, Eigen::Vector3d &V3out, Eigen::Vector3d &V4out);
+  void getVerticesR2(Eigen::Vector3d &V1out, Eigen::Vector3d &V2out, Eigen::Vector3d &V3out, Eigen::Vector3d &V4out);
 
   /* -- Compute the collision detection -- */
   int computeRRintersections( void );
@@ -103,7 +98,7 @@ class CollisionTwoRectangles
   void printRectanglesVertices( void );
 
   /* -- Collision Points -- */
-  std::vector<Vector3d> pointsRR;
+  std::vector<Eigen::Vector3d> pointsRR;
   //std::vector<Point3d> pointsRR;
  
  private:

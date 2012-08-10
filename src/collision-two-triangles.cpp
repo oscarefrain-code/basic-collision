@@ -28,7 +28,8 @@
 #include <collision-two-triangles.h>
 #include <iostream>
 
-
+#include <Eigen/Dense>
+using namespace Eigen;
 
 /*==============================================================================
           INITIALIZATION, SETTERS AND GETTERS   
@@ -167,6 +168,8 @@ getCoplanarTolerance(double & tol)
 int CollisionTwoTriangles::
 computeTTintersections( void )
 {
+  printTrianglesVertices();
+
   Vector2d isect1, isect2;
   double d1, d2;
   Vector3d distT2, distT1;    // distances from the vertices to the plane of the other triangle
