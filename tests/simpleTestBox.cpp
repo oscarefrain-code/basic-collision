@@ -25,8 +25,10 @@
 #include <iostream>
 #include <math.h>
 
+#include <Eigen/Dense>
+using namespace Eigen;
 
-void rotMatrix(Matrix3d &R, Vector3d axis, double angle);
+Matrix3d rotMatrix(Vector3d axis, double angle);
 
 
 int main( void )
@@ -35,83 +37,102 @@ int main( void )
   Matrix3d R1, R2;
   Vector3d T1, T2, axis;
 
-  CollisionTwoBoxes scene(4.0, 2.0, 1.0, 4.0, 2.0, 1.0);
-  scene.setTolerance(0.001);
+  // CollisionTwoBoxes scene(4.0, 2.0, 1.0, 4.0, 2.0, 1.0);
+  // scene.setTolerance(0.001);
 
-  axis << 1.0, 0.0, 0.0;
-  T1 << 2.0, 1.0, 0.5;
-  //T1[0]=-1.0; T1[1]=2.0; T1[2]=1.5;
-  rotMatrix(R1, axis, 0.0);
-  scene.setTransformation1(R1, T1);
-
-  // Strange if T2[0]=-1 !!!! CHECK IT OUT !!!!
-  axis << 1.0, 0.0, 0.0;
-  
-  //T2[0]=2.0; T2[1]=1.0; T2[2]=2.5;
-  //T2[0]=4.0; T2[1]=2.0; T2[2]=1.5;
-  //T2[0]=-1.0; T2[1]=2.0; T2[2]=1.5;   
-  T2 << -0.5, 2.0, 1.5;   
-  //T2[0]=2.0; T2[1]=1.0; T2[2]=0.5;
-  //T2[0]=4.0; T2[1]=2.0; T2[2]=1.4999;
-  rotMatrix(R2, axis, 0.0);
-  scene.setTransformation2(R2, T2);
-
-
-  //CollisionTwoBoxes scene(4.0, 2.0, 1.0, 4.0, 2.0, 1.0);
-  //scene.setTolerance(0.001);
-
-  // axis[0]=1.0; axis[1]=0.0; axis[2]=0.0;
-  // T1[0]=2.0; T1[1]=1.0; T1[2]=0.5;
+  // axis << 1.0, 0.0, 0.0;
+  // T1 << 2.0, 1.0, 0.5;
   // //T1[0]=-1.0; T1[1]=2.0; T1[2]=1.5;
   // rotMatrix(R1, axis, 0.0);
   // scene.setTransformation1(R1, T1);
 
-  // // Strange if T2[0]=-1 !!!! CHECK IT OUT !!!!x
-  // axis[0]=1.0; axis[1]=0.0; axis[2]=0.0;
+  // // Strange if T2[0]=-1 !!!! CHECK IT OUT !!!!
+  // axis << 1.0, 0.0, 0.0;
+  
   // //T2[0]=2.0; T2[1]=1.0; T2[2]=2.5;
   // //T2[0]=4.0; T2[1]=2.0; T2[2]=1.5;
   // //T2[0]=-1.0; T2[1]=2.0; T2[2]=1.5;   
-  // T2[0]=-0.5; T2[1]=2.0; T2[2]=1.5;   
+  // T2 << -0.5, 2.0, 1.5;   
   // //T2[0]=2.0; T2[1]=1.0; T2[2]=0.5;
   // //T2[0]=4.0; T2[1]=2.0; T2[2]=1.4999;
   // rotMatrix(R2, axis, 0.0);
   // scene.setTransformation2(R2, T2);
 
 
-  // CollisionTwoBoxes scene;
-  // scene.setTolerance(0.01);
+  // //CollisionTwoBoxes scene(4.0, 2.0, 1.0, 4.0, 2.0, 1.0);
+  // //scene.setTolerance(0.001);
 
-  // R1[0]=0.9999860339278217 ; R1[1]=-0.00083655099522303; R1[2]=0.0052184415047020994;
-  // R1[3]=0.00083625863550401463; R1[4]=0.99999964864171165; R1[5]=5.8206082807325495e-05;
-  // R1[6]=-0.0052184883635159962; R1[7]=-5.3841303124812213e-05; R1[8]=0.99998638214743407;
-  // T1[0]=-0.016225030166884216; T1[1]=-0.10562326452894533; T1[2]=0.10059533757257406;
-  // scene.setLengthB1(0.23, 0.135, 0.00001);
-  // scene.setTransformation1(R1, T1);
+  // // axis[0]=1.0; axis[1]=0.0; axis[2]=0.0;
+  // // T1[0]=2.0; T1[1]=1.0; T1[2]=0.5;
+  // // //T1[0]=-1.0; T1[1]=2.0; T1[2]=1.5;
+  // // rotMatrix(R1, axis, 0.0);
+  // // scene.setTransformation1(R1, T1);
 
-  // R2[0]=1.0; R2[1]=0.0; R2[2]=0.0;
-  // R2[3]=0.0; R2[4]=1.0; R2[5]=0.0;
-  // R2[6]=0.0; R2[7]=0.0; R2[8]=1.0;
-  // T2[0]=0.03;   T2[1]=-0.13;    T2[2]=0.05;
-  // scene.setLengthB2(0.19, 0.115, 0.10);
-  // scene.setTransformation2(R2, T2);
+  // // // Strange if T2[0]=-1 !!!! CHECK IT OUT !!!!x
+  // // axis[0]=1.0; axis[1]=0.0; axis[2]=0.0;
+  // // //T2[0]=2.0; T2[1]=1.0; T2[2]=2.5;
+  // // //T2[0]=4.0; T2[1]=2.0; T2[2]=1.5;
+  // // //T2[0]=-1.0; T2[1]=2.0; T2[2]=1.5;   
+  // // T2[0]=-0.5; T2[1]=2.0; T2[2]=1.5;   
+  // // //T2[0]=2.0; T2[1]=1.0; T2[2]=0.5;
+  // // //T2[0]=4.0; T2[1]=2.0; T2[2]=1.4999;
+  // // rotMatrix(R2, axis, 0.0);
+  // // scene.setTransformation2(R2, T2);
+
+
+  // // CollisionTwoBoxes scene;
+  // // scene.setTolerance(0.01);
+
+  // // R1[0]=0.9999860339278217 ; R1[1]=-0.00083655099522303; R1[2]=0.0052184415047020994;
+  // // R1[3]=0.00083625863550401463; R1[4]=0.99999964864171165; R1[5]=5.8206082807325495e-05;
+  // // R1[6]=-0.0052184883635159962; R1[7]=-5.3841303124812213e-05; R1[8]=0.99998638214743407;
+  // // T1[0]=-0.016225030166884216; T1[1]=-0.10562326452894533; T1[2]=0.10059533757257406;
+  // // scene.setLengthB1(0.23, 0.135, 0.00001);
+  // // scene.setTransformation1(R1, T1);
+
+  // // R2[0]=1.0; R2[1]=0.0; R2[2]=0.0;
+  // // R2[3]=0.0; R2[4]=1.0; R2[5]=0.0;
+  // // R2[6]=0.0; R2[7]=0.0; R2[8]=1.0;
+  // // T2[0]=0.03;   T2[1]=-0.13;    T2[2]=0.05;
+  // // scene.setLengthB2(0.19, 0.115, 0.10);
+  // // scene.setTransformation2(R2, T2);
+
+  CollisionTwoBoxes scene(0.23, 0.135, 0.024, 0.19, 0.115, 0.10);
+  scene.setTolerance(0.005);
+
+  R2 << 1.0, 0.0, 0.0,
+        0.0, 1.0, 0.0,
+        0.0, 0.0, 1.0;
+  T2 << 0.03, -0.13, 0.03;
+
+  R1 << 0.99999999999999978, 3.738479408160609e-09, 2.7267014987878495e-08,
+    -3.7384784942671144e-09, 0.99999999999999944, -3.3435310033084201e-08,
+    -2.7267015140377106e-08, 3.3435309937393195e-08, 0.99999999999999922;
+  T1 << -0.020860537574661286, -0.071387244448416889, 0.09200000535012888;
+  // R1 << 1.0, 0.0, 0.0,
+  //       0.0, 1.0, 0.0,
+  //       0.0, 0.0, 1.0;
+  //T1 << -0.020860537574661286, -0.071387244448416889, 0.09200001;
+
+  scene.setTransformation1(R1, T1);
+  scene.setTransformation2(R2, T2);
 
   collisionDetected = scene.computeBBintersections();
-  scene.printBoxesVertices();
-  scene.printLengths();
-  scene.printTransformation();
+  // scene.printBoxesVertices();
+  // scene.printLengths();
+  // scene.printTransformation();
 
   scene.printBBcollisionInformation();
-  std::cout << std::endl;
+  // std::cout << std::endl;
 
   return 0;
 }
 
 
-
-
-void rotMatrix(Matrix3d &R, Vector3d axis, double angle)
+Matrix3d rotMatrix(Vector3d axis, double angle)
 {
   double ca, sa, va, norm_axis;
+  Matrix3d R;
 
   ca=cos(angle); sa=sin(angle); va=1-cos(angle);
   norm_axis = sqrt(axis(0)*axis(0)+axis(1)*axis(1)+axis(2)*axis(2));
@@ -131,6 +152,8 @@ void rotMatrix(Matrix3d &R, Vector3d axis, double angle)
   if (false) {
     std::cout << R << std::endl;
   }
+
+  return R;
 }
 
 

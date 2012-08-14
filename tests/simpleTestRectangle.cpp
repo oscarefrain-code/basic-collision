@@ -77,6 +77,16 @@ int main( void )
   // setVector(R2V3, -0.065, -0.0725, 0.1);  setVector(R2V4, 0.125, -0.0725, 0.1);
   // evaluate(scene, R1V1, R1V2, R1V3, R1V4, R2V1, R2V2, R2V3, R2V4);
 
+  std::cout << "\nTesting case: " << std::endl;
+
+  V1 << 0.0941395, -0.00388724, 0.08; V2 << -0.135861, -0.00388724, 0.08; V3 << -0.135861, -0.138887, 0.08; V4 << 0.0941395, -0.138887, 0.08;
+  scene.setVerticesR1(V1, V2, V3, V4);
+
+  V1 << 0.125, -0.0725, 0.08; V2 << -0.065, -0.0725, 0.08; V3 << -0.065, -0.1875, 0.08; V4 << 0.125, -0.1875, 0.08;
+  scene.setVerticesR2(V1, V2, V3, V4);
+
+  evaluateRRCollision( scene );
+
   return 0;
 }
 

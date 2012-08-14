@@ -27,6 +27,8 @@
 #include <collision-one-many-boxes.h>
 #include <iostream>
 
+#include <Eigen/Dense>
+using namespace Eigen;
 
 /* -- Constructors -- */
 CollisionOneManyBoxes::
@@ -82,10 +84,6 @@ void CollisionOneManyBoxes::
 setTransformationB1(Matrix3d Rin, Vector3d Tin)
 {
   R1 = Rin; T1= Tin;
-  // R1[0]=R[0]; R1[1]=R[1]; R1[2]=R[2];
-  // R1[3]=R[3]; R1[4]=R[4]; R1[5]=R[5];
-  // R1[6]=R[6]; R1[7]=R[7]; R1[8]=R[8];
-  // T1[0]=T[0]; T1[1]=T[1]; T1[2]=T[2];
 
   // Update the value of all the box-box pairs
   for (int i=0; i<collisionBoxes.size(); i++){
@@ -116,11 +114,6 @@ computeIntersections( void )
   /* Clear the possible 'previous' contact points */
   pointsBBs.clear();
 
-  // Update the tolerance of each pair of boxes
-  // for (int i=0; i<collisionBoxes.size(); i++){
-  //   collisionBoxes[i].setTolerance(tolerance);
-  // }
-  
   int collisionTemp; 
   collisionIndicator = 0;
   for (int i=0; i<collisionBoxes.size(); i++){
@@ -128,7 +121,6 @@ computeIntersections( void )
     collisionIndicator = collisionIndicator || collisionTemp;
   }
 
-  //Point3d tempPoint;
   Vector3d tempPoint;
   if (collisionIndicator){
     for (int i=0; i<collisionBoxes.size(); i++){
@@ -185,12 +177,12 @@ printBoxesVertices( void )
   for (int i=0; i<collisionBoxes.size(); i++){
     if (i==0) {
       collisionBoxes[i].getVerticesB1(V1, V2, V3, V4, V5, V6, V7, V8);
-      std::cout << "Vertices box 1: [" << V1 << "], [" << V2 << "], [" << V3 << "],[" << V4 << "],["
-		<< V5 << "], [" << V6 << "], [" << V7 << "],[" << V8 << "]" << std::endl;
+      std::cout << "Vertices box 1: [" << V1.transpose() << "], [" << V2.transpose() << "], [" << V3.transpose() << "],[" << V4.transpose() << "],["
+		<< V5.transpose() << "], [" << V6.transpose() << "], [" << V7.transpose() << "],[" << V8.transpose() << "]" << std::endl;
     }
     collisionBoxes[i].getVerticesB2(V1, V2, V3, V4, V5, V6, V7, V8);
-    std::cout << "Vertices box "<< i+2 << ": [" << V1 << "], [" << V2 << "], [" << V3 << "],[" << V4 << "],["
-	      << V5 << "], [" << V6 << "], [" << V7 << "],[" << V8 << "]" << std::endl;
+    std::cout << "Vertices box "<< i+2 << ": [" << V1.transpose() << "], [" << V2.transpose() << "], [" << V3.transpose() << "],[" << V4.transpose() << "],["
+	      << V5.transpose() << "], [" << V6.transpose() << "], [" << V7.transpose() << "],[" << V8.transpose() << "]" << std::endl;
   }
 
 }

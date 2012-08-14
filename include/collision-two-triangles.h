@@ -35,7 +35,6 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 
-using namespace Eigen;
 
 /* Definition of a 'minimum value' to be used as a threshold for the triangle test*/
 //#define TRI_EPSILON 0.000001
@@ -45,9 +44,9 @@ class Triangle
 {
  public:
   /* -- Vertices -- */
-  Vector3d v1;   
-  Vector3d v2;   
-  Vector3d v3;
+  Eigen::Vector3d v1;   
+  Eigen::Vector3d v2;   
+  Eigen::Vector3d v3;
   /* -- Constructors -- */
   Triangle()
     {
@@ -55,15 +54,15 @@ class Triangle
       v2 << 0, 0, 0;
       v3 << 0, 0, 0;
     }
-  Triangle(Vector3d v1in, Vector3d v2in, Vector3d v3in)
+  Triangle(const Eigen::Vector3d & v1in, const Eigen::Vector3d & v2in, const Eigen::Vector3d & v3in)
     { 
       setVertices(v1in, v2in, v3in);
     }
   /* -- Functions -- */
-  void setVertices(Vector3d v1in, Vector3d v2in, Vector3d v3in)
+  void setVertices(const Eigen::Vector3d & v1in, const Eigen::Vector3d & v2in, const Eigen::Vector3d & v3in)
   {  v1=v1in; v2=v2in; v3=v3in;
   }
-  void getVertices(Vector3d &v1out, Vector3d &v2out, Vector3d &v3out)
+  void getVertices(Eigen::Vector3d &v1out, Eigen::Vector3d &v2out, Eigen::Vector3d &v3out)
   {  v1out=v1; v2out=v2; v3out=v3;
   }
   void print()
@@ -84,8 +83,8 @@ class CollisionTwoTriangles
   /* -- Constructors -- */
   CollisionTwoTriangles();
   CollisionTwoTriangles(Triangle t1, Triangle t2);
-  CollisionTwoTriangles(Vector3d t1v1, Vector3d t1v2, Vector3d t1v3,
-  			Vector3d t2v1, Vector3d t2v2, Vector3d t2v3);
+  CollisionTwoTriangles(Eigen::Vector3d t1v1, Eigen::Vector3d t1v2, Eigen::Vector3d t1v3,
+  			Eigen::Vector3d t2v1, Eigen::Vector3d t2v2, Eigen::Vector3d t2v3);
 
   /* -- Set the triangles -- */
   void setTriangles(Triangle t1, Triangle t2);
@@ -93,18 +92,18 @@ class CollisionTwoTriangles
   void setTriangle2(Triangle t2);
 
   /* -- Set values for the vertices -- */
-  void setVerticesAll(Vector3d t1v1, Vector3d t1v2, Vector3d t1v3,
-		      Vector3d t2v1, Vector3d t2v2, Vector3d t2v3);
-  void setVerticesT1(Vector3d V1in, Vector3d V2in, Vector3d V3in);
-  void setVerticesT2(Vector3d V1in, Vector3d V2in, Vector3d V3in);
+  void setVerticesAll(Eigen::Vector3d t1v1, Eigen::Vector3d t1v2, Eigen::Vector3d t1v3,
+		      Eigen::Vector3d t2v1, Eigen::Vector3d t2v2, Eigen::Vector3d t2v3);
+  void setVerticesT1(Eigen::Vector3d V1in, Eigen::Vector3d V2in, Eigen::Vector3d V3in);
+  void setVerticesT2(Eigen::Vector3d V1in, Eigen::Vector3d V2in, Eigen::Vector3d V3in);
 
   /* -- Set and get the coplanar tolerance -- */
   void setCoplanarTolerance(double tol);
-  void getCoplanarTolerance(double &tol);
+  double getCoplanarTolerance(void);
 
   /* -- Get the values of the vertices -- */
-  void getVerticesT1(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out);
-  void getVerticesT2(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out);
+  void getVerticesT1(Eigen::Vector3d &V1out, Eigen::Vector3d &V2out, Eigen::Vector3d &V3out);
+  void getVerticesT2(Eigen::Vector3d &V1out, Eigen::Vector3d &V2out, Eigen::Vector3d &V3out);
 
   /* -- Compute the collision detection algorithm -- */
   int computeTTintersections( void );
@@ -114,7 +113,7 @@ class CollisionTwoTriangles
   void printTrianglesVertices( void );
 
   /* -- Vector to store the collision points -- */
-  std::vector<Vector3d> pointsTT;
+  std::vector<Eigen::Vector3d> pointsTT;
 
  private:
 
@@ -133,16 +132,16 @@ class CollisionTwoTriangles
 
   /* --- Internal Functions --- */
   void defaultInit( void );
-  bool coplanar_tri_tri(Vector3d N);
-  bool edge_against_tri_edges(Vector3d v0, Vector3d v1);
-  bool edge_edge_test(Vector3d v0, Vector3d u0, Vector3d u1, double Ax, double Ay);
-  bool point_in_tri(Vector3d v0, Vector3d u0, Vector3d u1, Vector3d u2);
-  int compute_intervals_isectline(int id, Vector3d VV, Vector3d DD,
-				  double D0D1, double D0D2, Vector2d &isect,
-				  Vector3d &isectpoint0, Vector3d &isectpoint1);
-  void isect2(Vector3d VTX0, Vector3d VTX1, Vector3d VTX2, 
+  bool coplanar_tri_tri(Eigen::Vector3d N);
+  bool edge_against_tri_edges(Eigen::Vector3d v0, Eigen::Vector3d v1);
+  bool edge_edge_test(Eigen::Vector3d v0, Eigen::Vector3d u0, Eigen::Vector3d u1, double Ax, double Ay);
+  bool point_in_tri(Eigen::Vector3d v0, Eigen::Vector3d u0, Eigen::Vector3d u1, Eigen::Vector3d u2);
+  int compute_intervals_isectline(int id, Eigen::Vector3d VV, Eigen::Vector3d DD,
+				  double D0D1, double D0D2, Eigen::Vector2d &isect,
+				  Eigen::Vector3d &isectpoint0, Eigen::Vector3d &isectpoint1);
+  void isect2(Eigen::Vector3d VTX0, Eigen::Vector3d VTX1, Eigen::Vector3d VTX2, 
 	      double VV1, double VV2, double VV3, double D0,double D1,double D2,
-	      Vector2d &isect, Vector3d &isectpoint0, Vector3d &isectpoint1); 
+	      Eigen::Vector2d &isect, Eigen::Vector3d &isectpoint0, Eigen::Vector3d &isectpoint1); 
 
   
 };

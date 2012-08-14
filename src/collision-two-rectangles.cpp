@@ -27,6 +27,9 @@
 #include <collision-two-rectangles.h>
 #include <iostream>
 
+#include <Eigen/Dense>
+using namespace Eigen;
+
 
 /* --- Constructor that initializes all the vertices to zero --- */
 CollisionTwoRectangles::
@@ -106,6 +109,32 @@ setRectangle2(Rectangle r2in)
 }
 
 
+/* -- Set the coplanar tolerance (of the triangles) -- */
+void CollisionTwoRectangles::
+setCoplanarTolerance(const double tol)
+{
+  scene1.setCoplanarTolerance(tol);
+  scene2.setCoplanarTolerance(tol);
+  scene3.setCoplanarTolerance(tol);
+  scene4.setCoplanarTolerance(tol);
+}
+
+double CollisionTwoRectangles::
+getCoplanarTolerance( void )
+{
+  double t1, t2, t3, t4;
+  t1 = scene1.getCoplanarTolerance();
+  t2 = scene2.getCoplanarTolerance();
+  t3 = scene3.getCoplanarTolerance();
+  t4 = scene4.getCoplanarTolerance();
+  if ((t1==t2) && (t2==t3) && (t3==t4))
+    return (t1);
+  else
+    std::cerr << "Two Rectangles: Coplanar tolerance is not the same "
+	      << "for all the triangles !!!" << std::endl;
+}
+
+
 /* --- Get the vertices of rectangle 1 --- */
 void CollisionTwoRectangles::
 getVerticesR1(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out, Vector3d &V4out)
@@ -131,14 +160,19 @@ computeRRintersections( void )
 {
   int collisionTT[4];
 
+  /* Get the vertices */
+  Vector3d R1v1, R1v2, R1v3, R1v4, R2v1, R2v2, R2v3, R2v4;
+  R1.getVertices(R1v1, R1v2, R1v3, R1v4);
+  R2.getVertices(R2v1, R2v2, R2v3, R2v4);
+
   /* Clear the possible 'previous' contact points */
   pointsRR.clear();
 
   /* Divide the rectangle/rectangle problem in 4 triangle/triangle problem  */
-  CollisionTwoTriangles scene1(R1.v1, R1.v2, R1.v3, R2.v1, R2.v2, R2.v3);
-  CollisionTwoTriangles scene2(R1.v1, R1.v2, R1.v3, R2.v3, R2.v4, R2.v1);
-  CollisionTwoTriangles scene3(R1.v3, R1.v4, R1.v1, R2.v1, R2.v2, R2.v3);
-  CollisionTwoTriangles scene4(R1.v3, R1.v4, R1.v1, R2.v3, R2.v4, R2.v1);
+  scene1.setVerticesAll(R1v1, R1v2, R1v3, R2v1, R2v2, R2v3);
+  scene2.setVerticesAll(R1v1, R1v2, R1v3, R2v3, R2v4, R2v1);
+  scene3.setVerticesAll(R1v3, R1v4, R1v1, R2v1, R2v2, R2v3);
+  scene4.setVerticesAll(R1v3, R1v4, R1v1, R2v3, R2v4, R2v1);
 
   collisionTT[0] = scene1.computeTTintersections();
   collisionTT[1] = scene2.computeTTintersections();
@@ -154,17 +188,13 @@ computeRRintersections( void )
   // std::cout << std::endl;
 
   // for (int i=0; i<scene1.pointsTT.size(); i++)
-  //   scene1.pointsTT[i].print();
-  // std::cout << std::endl;
+  //   std::cout << "  (" << scene1.pointsTT[i].transpose() << ")  " << std::endl;
   // for (int i=0; i<scene2.pointsTT.size(); i++)
-  //   scene2.pointsTT[i].print();
-  // std::cout << std::endl;
+  //   std::cout << "  (" << scene2.pointsTT[i].transpose() << ")  " << std::endl;
   // for (int i=0; i<scene3.pointsTT.size(); i++)
-  //   scene3.pointsTT[i].print();
-  // std::cout << std::endl;
+  //   std::cout << "  (" << scene3.pointsTT[i].transpose() << ")  " << std::endl;
   // for (int i=0; i<scene4.pointsTT.size(); i++)
-  //   scene4.pointsTT[i].print();
-  // std::cout << std::endl;
+  //   std::cout << "  (" << scene4.pointsTT[i].transpose() << ")  " << std::endl;
 
 
   /* Copy all the collision points in pointsRR  */
