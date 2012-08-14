@@ -55,12 +55,12 @@ class Triangle
       v2 << 0, 0, 0;
       v3 << 0, 0, 0;
     }
-  Triangle(Eigen::Vector3d v1in, Eigen::Vector3d v2in, Eigen::Vector3d v3in)
+  Triangle(const Eigen::Vector3d & v1in, const Eigen::Vector3d & v2in, const Eigen::Vector3d & v3in)
     { 
       setVertices(v1in, v2in, v3in);
     }
   /* -- Functions -- */
-  void setVertices(Eigen::Vector3d v1in, Eigen::Vector3d v2in, Eigen::Vector3d v3in)
+  void setVertices(const Eigen::Vector3d & v1in, const Eigen::Vector3d & v2in, const Eigen::Vector3d & v3in)
   {  v1=v1in; v2=v2in; v3=v3in;
   }
   void getVertices(Eigen::Vector3d &v1out, Eigen::Vector3d &v2out, Eigen::Vector3d &v3out)
@@ -83,7 +83,7 @@ class CollisionTwoTriangles
 
   /* -- Constructors -- */
   CollisionTwoTriangles();
-  CollisionTwoTriangles(Triangle t1, Triangle t2);
+  CollisionTwoTriangles(const Triangle & t1, const Triangle & t2);
   CollisionTwoTriangles(Eigen::Vector3d t1v1, Eigen::Vector3d t1v2, Eigen::Vector3d t1v3,
   			Eigen::Vector3d t2v1, Eigen::Vector3d t2v2, Eigen::Vector3d t2v3);
 
@@ -100,7 +100,7 @@ class CollisionTwoTriangles
 
   /* -- Set and get the coplanar tolerance -- */
   void setCoplanarTolerance(double tol);
-  void getCoplanarTolerance(double &tol);
+  double getCoplanarTolerance( void );
 
   /* -- Get the values of the vertices -- */
   void getVerticesT1(Eigen::Vector3d &V1out, Eigen::Vector3d &V2out, Eigen::Vector3d &V3out);

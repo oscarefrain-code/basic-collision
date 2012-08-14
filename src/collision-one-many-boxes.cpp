@@ -84,10 +84,6 @@ void CollisionOneManyBoxes::
 setTransformationB1(Matrix3d Rin, Vector3d Tin)
 {
   R1 = Rin; T1= Tin;
-  // R1[0]=R[0]; R1[1]=R[1]; R1[2]=R[2];
-  // R1[3]=R[3]; R1[4]=R[4]; R1[5]=R[5];
-  // R1[6]=R[6]; R1[7]=R[7]; R1[8]=R[8];
-  // T1[0]=T[0]; T1[1]=T[1]; T1[2]=T[2];
 
   // Update the value of all the box-box pairs
   for (int i=0; i<collisionBoxes.size(); i++){

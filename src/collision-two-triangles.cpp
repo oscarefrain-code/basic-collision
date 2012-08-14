@@ -57,7 +57,7 @@ CollisionTwoTriangles(Vector3d t1v1, Vector3d t1v2, Vector3d t1v3,
 
 /* --- Constructor that initializes both triangles --- */
 CollisionTwoTriangles::
-CollisionTwoTriangles(Triangle t1in, Triangle t2in)
+CollisionTwoTriangles(const Triangle & t1in, const Triangle & t2in)
 {
   T1=t1in; T2 = t2in;
   defaultInit();
@@ -71,7 +71,8 @@ defaultInit( void )
   D << 0, 0, 0;
   i0=0, i1=0, inot=0; collisionIndicator=0;
   //coplanar_tolerance = 0.0005;           // 0.5mm
-  coplanar_tolerance = 1e-10;
+  //coplanar_tolerance = 1e-10;
+  coplanar_tolerance = 0.000001;           // 0.001mm
 }
 
 
@@ -150,10 +151,10 @@ getVerticesT2(Vector3d &V1out, Vector3d &V2out, Vector3d &V3out)
 
 
 /* --- Get the value of the coplanar tolerance --- */
-void CollisionTwoTriangles::
-getCoplanarTolerance(double & tol)
+double CollisionTwoTriangles::
+getCoplanarTolerance(void)
 {
-  tol = coplanar_tolerance;
+  return (coplanar_tolerance);
 }
 
 
@@ -168,8 +169,6 @@ getCoplanarTolerance(double & tol)
 int CollisionTwoTriangles::
 computeTTintersections( void )
 {
-  printTrianglesVertices();
-
   Vector2d isect1, isect2;
   double d1, d2;
   Vector3d distT2, distT1;    // distances from the vertices to the plane of the other triangle

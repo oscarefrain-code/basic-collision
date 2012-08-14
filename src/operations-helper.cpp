@@ -65,7 +65,7 @@ prunePoints( std::vector<Vector3d>& points )
 	double norm2 = ( (points[i](0)-points[j](0)) * (points[i](0)-points[j](0)) ) +
 	  ( (points[i](1)-points[j](1)) * (points[i](1)-points[j](1)) ) + 
 	  ( (points[i](2)-points[j](2)) * (points[i](2)-points[j](2)) );
-	if (norm2 < (tolerance_distance*tolerance_distance) )
+	if (norm2 < (tolerance_distance_to_prune*tolerance_distance_to_prune) )
 	  {
 	    points.erase( points.begin()+j );
 	    j--;
@@ -112,26 +112,17 @@ convexHull( std::vector<Vector3d>& points )
        'normal' is not zero (if possible). If the normal is always zero, then, all the points lie on the same
        line and the extremes of the line have to be found
   */
-  // double p1[3] = {points[0].x, points[0].y, points[0].z};
-  // double p2[3] = {points[1].x, points[1].y, points[1].z};
-  // Vector3d p1 = points[0];
-  // Vector3d p2 = points[1];
 
-  //double p3[3], v1[3], v2[3], normal[3];
+  // Vector3d p1=points[0], p2=points[1];
   Vector3d p3, v1, v2, normal;
   bool normal_not_zero;
   //v1 = p1-p2;
   v1 = points[0]-points[1];
 
   for (int i=2; i<points.size(); i++) {
-    // p3[0] = points[i].x; p3[1] = points[i].y; p3[2] = points[i].z;
-    // sub(v2, p1, p3);
-    // cross(normal, v1, v2);
-    //p3 = points[i];
-    //v2 = p1 - p3;
     v2 = points[0] - points[i];
     normal = v1.cross(v2);
-    normal_not_zero = fabs(normal(0))>DIST_TOLERANCE || fabs(normal(1))>DIST_TOLERANCE || fabs(normal(2))>DIST_TOLERANCE;
+    normal_not_zero = fabs(normal(0))>tolerance_collinear || fabs(normal(1))>tolerance_collinear || fabs(normal(2))>tolerance_collinear;
     if (normal_not_zero)
       break;
   }
@@ -193,7 +184,6 @@ convexHull( std::vector<Vector3d>& points )
 
   /* Project onto an axis-aligned plane that maximizes the area of the polygon: compute indexes */
   // Discard the largest normal component
-  //double absN[3];
   Vector3d absN;
   int x, y, inot;
   absN(0) = fabs(normal(0)); absN(1)=fabs(normal(1)); absN(2)=fabs(normal(2));

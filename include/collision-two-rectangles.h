@@ -37,15 +37,13 @@
 class Rectangle
 {
  public:
-  /* -- Vertices -- */
-  Eigen::Vector3d v1, v2, v3, v4;   
   /* -- Constructors -- */
   Rectangle()
     {
       v1 << 0, 0, 0; v2 << 0, 0, 0;
       v3 << 0, 0, 0; v4 << 0, 0, 0;
     }
-  Rectangle(Eigen::Vector3d v1in, Eigen::Vector3d v2in, Eigen::Vector3d v3in, Eigen::Vector3d v4in)
+  Rectangle(const Eigen::Vector3d v1in, const Eigen::Vector3d v2in, const Eigen::Vector3d v3in, const Eigen::Vector3d v4in)
     { 
       setVertices(v1in, v2in, v3in, v4in);
     }
@@ -62,6 +60,9 @@ class Rectangle
     std::cout << "V1=["<< v1.transpose() << "], V2=[" << v2.transpose() << "], V3=["
 	      << v3.transpose() << "], V4=[" << v4.transpose() << "]" << std::endl;
   }
+ private:
+  /* -- Vertices -- */
+  Eigen::Vector3d v1, v2, v3, v4;   
 };
 
 
@@ -80,6 +81,10 @@ class CollisionTwoRectangles
 		      Eigen::Vector3d r2v1, Eigen::Vector3d r2v2, Eigen::Vector3d r2v3, Eigen::Vector3d r2v4);
   void setVerticesR1(Eigen::Vector3d V1in, Eigen::Vector3d V2in, Eigen::Vector3d V3in, Eigen::Vector3d V4in);
   void setVerticesR2(Eigen::Vector3d V1in, Eigen::Vector3d V2in, Eigen::Vector3d V3in, Eigen::Vector3d V4in);
+  
+  /* -- Set/get the coplanar tolerance (of the triangles) -- */
+  void setCoplanarTolerance(const double tol);
+  double getCoplanarTolerance( void );
 
   /* -- Set the rectangles -- */
   void setRectangles(Rectangle r1in, Rectangle r2in);
@@ -105,8 +110,13 @@ class CollisionTwoRectangles
   /* --- Variables --- */
   Rectangle R1, R2;                        // Rectangles to be used
   int collisionIndicator;
-  /* double V0[3], V1[3], V2[3], V3[3];   // Vertices of rectangle 1: V0, V1, V2, V3 */
-  /* double U0[3], U1[3], U2[3], U3[3];   // Vertices of rectangle 2: U0, U1, U2, U3 */
+
+  /* -- Objects that detect collision between triangles -- */
+  CollisionTwoTriangles scene1;
+  CollisionTwoTriangles scene2;
+  CollisionTwoTriangles scene3;
+  CollisionTwoTriangles scene4;
+
 
 };
 

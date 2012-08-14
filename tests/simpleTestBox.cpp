@@ -28,7 +28,7 @@
 #include <Eigen/Dense>
 using namespace Eigen;
 
-void rotMatrix(Matrix3d &R, Vector3d axis, double angle);
+Matrix3d rotMatrix(Vector3d axis, double angle);
 
 
 int main( void )
@@ -109,6 +109,10 @@ int main( void )
     -3.7384784942671144e-09, 0.99999999999999944, -3.3435310033084201e-08,
     -2.7267015140377106e-08, 3.3435309937393195e-08, 0.99999999999999922;
   T1 << -0.020860537574661286, -0.071387244448416889, 0.09200000535012888;
+  // R1 << 1.0, 0.0, 0.0,
+  //       0.0, 1.0, 0.0,
+  //       0.0, 0.0, 1.0;
+  //T1 << -0.020860537574661286, -0.071387244448416889, 0.09200001;
 
   scene.setTransformation1(R1, T1);
   scene.setTransformation2(R2, T2);
@@ -118,7 +122,7 @@ int main( void )
   // scene.printLengths();
   // scene.printTransformation();
 
-  // scene.printBBcollisionInformation();
+  scene.printBBcollisionInformation();
   // std::cout << std::endl;3
 
   return 0;
@@ -127,9 +131,10 @@ int main( void )
 
 
 
-void rotMatrix(Matrix3d &R, Vector3d axis, double angle)
+Matrix3d rotMatrix(Vector3d axis, double angle)
 {
   double ca, sa, va, norm_axis;
+  Matrix3d R;
 
   ca=cos(angle); sa=sin(angle); va=1-cos(angle);
   norm_axis = sqrt(axis(0)*axis(0)+axis(1)*axis(1)+axis(2)*axis(2));
@@ -149,6 +154,8 @@ void rotMatrix(Matrix3d &R, Vector3d axis, double angle)
   if (false) {
     std::cout << R << std::endl;
   }
+
+  return R;
 }
 
 
