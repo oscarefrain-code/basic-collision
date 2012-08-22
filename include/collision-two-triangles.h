@@ -68,8 +68,8 @@ class Triangle
   void print()
   {
     /* Print as: V1=[x y z], V2=[x y z], V3=[x y z] */
-    std::cout << "V1=["<< v1.transpose() << "], V2=[" << v2.transpose()
-	      << "], V3=[" << v3.transpose() << "] " << std::endl;
+    std::cout << "V1=["<< v1.transpose() << "]; V2=[" << v2.transpose()
+	      << "]; V3=[" << v3.transpose() << "]; " << std::endl;
   }
 };
 

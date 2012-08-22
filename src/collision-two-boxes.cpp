@@ -357,6 +357,8 @@ computeBBintersections( void )
   // Collision detected? (yes:1, no:0)
   // collisionIndicator = collisions[0] || collisions[1] || collisions[2] ||
   //   collisions[3] || collisions[4] || collisions[5] || collisions[6];
+  //collisionIndicator = collisions[6];
+
   collisionIndicator = collisions[0] || collisions[1] || collisions[2] ||
     collisions[3] || collisions[4] || collisions[5] || collisions[6] ||
     collisions[7] || collisions[8] || collisions[9] || collisions[10] ||

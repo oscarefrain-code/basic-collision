@@ -182,6 +182,11 @@ computeRRintersections( void )
   collisionIndicator = collisionTT[0] || collisionTT[1] ||
                        collisionTT[2] || collisionTT[3];
 
+  // std::cout << std::endl;
+  // scene3.printTrianglesVertices();
+  // scene3.printTTcollisionInformation();
+  // collisionIndicator = collisionTT[2];
+
   // std::cout << "Collisions : ";
   // for (int i=0; i<4; i++)
   //   std::cout << collisionTT[i] << " ";
@@ -192,9 +197,9 @@ computeRRintersections( void )
   // for (int i=0; i<scene2.pointsTT.size(); i++)
   //   std::cout << "  (" << scene2.pointsTT[i].transpose() << ")  " << std::endl;
   // for (int i=0; i<scene3.pointsTT.size(); i++)
-  //   std::cout << "  (" << scene3.pointsTT[i].transpose() << ")  " << std::endl;
+  //   std::cout << "P" << i+1 << "= [" << scene3.pointsTT[i].transpose() << "]; " << std::endl;
   // for (int i=0; i<scene4.pointsTT.size(); i++)
-  //   std::cout << "  (" << scene4.pointsTT[i].transpose() << ")  " << std::endl;
+  //   std::cout << "P" << i+1 << "= [" << scene4.pointsTT[i].transpose() << "]; " << std::endl;
 
 
   /* Copy all the collision points in pointsRR  */
@@ -223,7 +228,7 @@ printRRcollisionInformation( void )
   if (collisionIndicator) {
     std::cout << "Result: Rectangles are intersecting at" << std::endl;
     for (int i=0; i<pointsRR.size(); i++){
-      std::cout << "  (" << pointsRR[i].transpose() << ")  ";
+      std::cout << "  [" << pointsRR[i].transpose() << "]  ";
     }
   }
   else{
