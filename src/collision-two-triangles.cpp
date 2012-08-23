@@ -70,8 +70,8 @@ defaultInit( void )
 {
   D << 0, 0, 0;
   i0=0, i1=0, inot=0; collisionIndicator=0;
-  //coplanar_tolerance = 0.0005;           // 0.5mm
-  coplanar_tolerance = 0.001;           // 1 mm
+  coplanar_tolerance = 0.0005;           // 0.5mm
+  //coplanar_tolerance = 0.001;           // 1 mm
   //coplanar_tolerance = 1e-10;
   //coplanar_tolerance = 0.000001;           // 0.001mm
 }
@@ -323,23 +323,23 @@ computeTTintersections( void )
   Vector3d P1L2 = p1T2inPlane1, P2L2 = p2T2inPlane1;
   num = (P1L2(0)-P1L1(0))*(P2L2(1)-P1L2(1)) + (P1L1(1)-P1L2(1))*(P2L2(0)-P1L2(0));
   den = (P2L1(0)-P1L1(0))*(P2L2(1)-P1L2(1)) - (P2L1(1)-P1L1(1))*(P2L2(0)-P1L2(0));
-  if (fabs(den) > minEps){
-    r1 = num/den;
-    if      (P2L2(0)-P1L2(0)) r2 = ( (P1L1(0)-P1L2(0))+r1*(P2L1(0)-P1L1(0)) ) / (P2L2(0)-P1L2(0));
-    else if (P2L2(1)-P1L2(1)) r2 = ( (P1L1(1)-P1L2(1))+r1*(P2L1(1)-P1L1(1)) ) / (P2L2(1)-P1L2(1));
-    else                      r2 = ( (P1L1(2)-P1L2(2))+r1*(P2L1(2)-P1L1(2)) ) / (P2L2(2)-P1L2(2));
-
-    // std::cout << "r1: " << r1 << std::endl;
-    // std::cout << "r2: " << r2 << std::endl;
-    // std::cout << "Int 1: " << P1L1+r1*(P2L1-P1L1) << std::endl;
-    // std::cout << "Int 2: " << P1L2+r2*(P2L2-P1L2) << std::endl;
-    
-    if (r1<=0 || r1>=1 || r2<=0 || r2>=1){
-      collisionIndicator = 0;
-      return 0;
-    }
+  if (fabs(den) > minEps)
+    {
+      r1 = num/den;
+      if      (P2L2(0)-P1L2(0)) r2 = ( (P1L1(0)-P1L2(0))+r1*(P2L1(0)-P1L1(0)) ) / (P2L2(0)-P1L2(0));
+      else if (P2L2(1)-P1L2(1)) r2 = ( (P1L1(1)-P1L2(1))+r1*(P2L1(1)-P1L1(1)) ) / (P2L2(1)-P1L2(1));
+      else                      r2 = ( (P1L1(2)-P1L2(2))+r1*(P2L1(2)-P1L1(2)) ) / (P2L2(2)-P1L2(2));
       
-  }
+      // std::cout << "r1: " << r1 << std::endl;
+      // std::cout << "r2: " << r2 << std::endl;
+      // std::cout << "Int 1: " << P1L1+r1*(P2L1-P1L1) << std::endl;
+      // std::cout << "Int 2: " << P1L2+r2*(P2L2-P1L2) << std::endl;
+      
+      if (r1<=0 || r1>=1 || r2<=0 || r2>=1){
+	collisionIndicator = 0;
+	return 0;
+      }
+    }
     
   /*  ====================================================================================================
    */

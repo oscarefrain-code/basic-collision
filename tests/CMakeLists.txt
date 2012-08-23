@@ -9,8 +9,8 @@ TARGET_LINK_LIBRARIES (simpleTestRectangle BasicCollision)
 ADD_EXECUTABLE (simpleTestBox simpleTestBox.cpp)
 TARGET_LINK_LIBRARIES (simpleTestBox BasicCollision)
 
-# ADD_EXECUTABLE (simpleTestBoxes simpleTestBoxes.cpp)
-# TARGET_LINK_LIBRARIES (simpleTestBoxes BasicCollision)
+ADD_EXECUTABLE (simpleTestBoxes simpleTestBoxes.cpp)
+TARGET_LINK_LIBRARIES (simpleTestBoxes BasicCollision)
 
 # ADD_EXECUTABLE (testEigen testEigen.cpp)
 # #TARGET_LINK_LIBRARIES (simpleTestBoxes BasicCollision)

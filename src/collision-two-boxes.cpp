@@ -314,17 +314,17 @@ computeBBintersections( void )
 
   collisions[0] = To1_To2.computeRRintersections(); // 
   collisions[1] = To1_Bo2.computeRRintersections(); //
-  collisions[2] = To1_Le2.computeRRintersections(); // Y
+  collisions[2] = To1_Le2.computeRRintersections(); // 
   collisions[3] = To1_Ri2.computeRRintersections(); // 
   collisions[4] = To1_Fr2.computeRRintersections(); // 
   collisions[5] = To1_Ba2.computeRRintersections(); //
 
-  collisions[6]  = Bo1_To2.computeRRintersections(); //
+  collisions[6]  = Bo1_To2.computeRRintersections(); // y
   collisions[7]  = Bo1_Bo2.computeRRintersections(); //
   collisions[8]  = Bo1_Le2.computeRRintersections(); //
-  collisions[9]  = Bo1_Ri2.computeRRintersections(); //
+  collisions[9]  = Bo1_Ri2.computeRRintersections(); // y
   collisions[10] = Bo1_Fr2.computeRRintersections(); //
-  collisions[11] = Bo1_Ba2.computeRRintersections(); //
+  collisions[11] = Bo1_Ba2.computeRRintersections(); // y
 
   collisions[12] = Le1_To2.computeRRintersections(); //
   collisions[13] = Le1_Bo2.computeRRintersections(); //
@@ -334,22 +334,22 @@ computeBBintersections( void )
   collisions[17] = Le1_Ba2.computeRRintersections(); //
 
   collisions[18] = Ri1_To2.computeRRintersections(); //
-  collisions[19] = Ri1_Bo2.computeRRintersections(); // Y
+  collisions[19] = Ri1_Bo2.computeRRintersections(); //
   collisions[20] = Ri1_Le2.computeRRintersections(); //
   collisions[21] = Ri1_Ri2.computeRRintersections(); //
   collisions[22] = Ri1_Fr2.computeRRintersections(); //
   collisions[23] = Ri1_Ba2.computeRRintersections(); //
 
   collisions[24] = Fr1_To2.computeRRintersections(); // 
-  collisions[25] = Fr1_Bo2.computeRRintersections(); // Y
-  collisions[26] = Fr1_Le2.computeRRintersections(); // Y
+  collisions[25] = Fr1_Bo2.computeRRintersections(); //
+  collisions[26] = Fr1_Le2.computeRRintersections(); //
   collisions[27] = Fr1_Ri2.computeRRintersections(); //
   collisions[28] = Fr1_Fr2.computeRRintersections(); //
   collisions[29] = Fr1_Ba2.computeRRintersections(); //
 
   collisions[30] = Ba1_To2.computeRRintersections(); //
-  collisions[31] = Ba1_Bo2.computeRRintersections(); // Y
-  collisions[32] = Ba1_Le2.computeRRintersections(); // Y
+  collisions[31] = Ba1_Bo2.computeRRintersections(); //
+  collisions[32] = Ba1_Le2.computeRRintersections(); //
   collisions[33] = Ba1_Ri2.computeRRintersections(); //
   collisions[34] = Ba1_Fr2.computeRRintersections(); //
   collisions[35] = Ba1_Ba2.computeRRintersections(); //
@@ -378,7 +378,7 @@ computeBBintersections( void )
   //     if ((i+1)%6 == 0) std::cout << " - ";
   //   }
   // std::cout << std::endl;
-  // printBoxesVertices();
+  // //printBoxesVertices();
 
   // for (int i=0; i<Bo1_To2.pointsRR.size(); i++)
   //   std::cout << " (" << Bo1_To2.pointsRR[i].transpose() << ") " << std::endl;
@@ -471,80 +471,82 @@ computeBBintersections( void )
   prunePoints(pointsBB);
   averageSimilarValues();
 
+  //printBBcollisionInformation();
+
   return collisionIndicator;
 }
 
 
 /* --- Get the average of very close points (to a certain tolerance) --- */
-void CollisionTwoBoxes::
-averageSimilarValues( void )
-{
-  double distance;
-  std::vector<int> indexToDiscard;
-  std::vector<Vector3d> result;
-  Vector3d sum; int Nsum;
-
-  for (int i=0; i<pointsBB.size(); i++){
-
-    /* Use i if it does not belong to the discarded indexes*/
-    if (find(indexToDiscard.begin(), indexToDiscard.end(), i) == indexToDiscard.end())
-      {
-  	/* Initialization of temporal variables*/
-  	sum = pointsBB[i]; Nsum = 1;
-
-  	for (int j=i+1; j<pointsBB.size(); j++){
-  	  /* Use j if it does not belong to the discarded indexes*/
-  	  if ( find(indexToDiscard.begin(), indexToDiscard.end(), j) == indexToDiscard.end())
-  	    {
-  	      distance = (pointsBB[i](0)-pointsBB[j](0))*(pointsBB[i](0)-pointsBB[j](0)) +
-  		(pointsBB[i](1)-pointsBB[j](1))*(pointsBB[i](1)-pointsBB[j](1)) +
-  		(pointsBB[i](2)-pointsBB[j](2))*(pointsBB[i](2)-pointsBB[j](2));
-  	      if ( distance < (tolerance*tolerance) )
-  		{
-		  //std::cout << " ... distance smaller than tolerance -> averaging ..." << std::endl;
-  		  sum(0) += pointsBB[j](0); sum(1) += pointsBB[j](1); sum(2) += pointsBB[j](2);
-  		  Nsum++;
-  		  indexToDiscard.push_back(j);
-  		}
-  	    }
-  	}
-	/* Get the average and push it back to 'result' */
-  	sum = (1.0/double(Nsum))*sum;
- 	result.push_back(sum);
-	// std::cout << "sum: " << sum.transpose() << ", Nsum: " << Nsum << ", Div: " << average.transpose() << std::endl;
-      }
-  }
-
-  pointsBB.assign(result.begin(), result.end());
-
-  // std::cout << "Result: ";
-  // for (int i=0; i<result.size(); i++){ std::cout << "  (" << result[i].transpose() << ")  ";  }
-  // std::cout << std::endl;
-
-}
-
-
-
 // void CollisionTwoBoxes::
 // averageSimilarValues( void )
 // {
-//   double dist;
-//   for (int i=0; i<pointsBB.size(); i++){
-//     for (int j=i+1; j<pointsBB.size(); j++){
-//       dist = (pointsBB[i](0)-pointsBB[j](0))*(pointsBB[i](0)-pointsBB[j](0)) +
-// 	     (pointsBB[i](1)-pointsBB[j](1))*(pointsBB[i](1)-pointsBB[j](1)) +
-//              (pointsBB[i](2)-pointsBB[j](2))*(pointsBB[i](2)-pointsBB[j](2));
+//   double distance;
+//   std::vector<int> indexToDiscard;
+//   std::vector<Vector3d> result;
+//   Vector3d sum; int Nsum;
 
-//       if ( dist < (tolerance*tolerance) ) {
-// 	pointsBB[i](0) = (pointsBB[i](0)+pointsBB[j](0))/2;
-// 	pointsBB[i](1) = (pointsBB[i](1)+pointsBB[j](1))/2;
-// 	pointsBB[i](2) = (pointsBB[i](2)+pointsBB[j](2))/2;
-// 	pointsBB.erase( pointsBB.begin()+j );
-// 	j--;
+//   for (int i=0; i<pointsBB.size(); i++){
+
+//     /* Use i if it does not belong to the discarded indexes*/
+//     if (find(indexToDiscard.begin(), indexToDiscard.end(), i) == indexToDiscard.end())
+//       {
+//   	/* Initialization of temporal variables*/
+//   	sum = pointsBB[i]; Nsum = 1;
+
+//   	for (int j=i+1; j<pointsBB.size(); j++){
+//   	  /* Use j if it does not belong to the discarded indexes*/
+//   	  if ( find(indexToDiscard.begin(), indexToDiscard.end(), j) == indexToDiscard.end())
+//   	    {
+//   	      distance = (pointsBB[i](0)-pointsBB[j](0))*(pointsBB[i](0)-pointsBB[j](0)) +
+//   		(pointsBB[i](1)-pointsBB[j](1))*(pointsBB[i](1)-pointsBB[j](1)) +
+//   		(pointsBB[i](2)-pointsBB[j](2))*(pointsBB[i](2)-pointsBB[j](2));
+//   	      if ( distance < (tolerance*tolerance) )
+//   		{
+// 		  //std::cout << " ... distance smaller than tolerance -> averaging ..." << std::endl;
+//   		  sum(0) += pointsBB[j](0); sum(1) += pointsBB[j](1); sum(2) += pointsBB[j](2);
+//   		  Nsum++;
+//   		  indexToDiscard.push_back(j);
+//   		}
+//   	    }
+//   	}
+// 	/* Get the average and push it back to 'result' */
+//   	sum = (1.0/double(Nsum))*sum;
+//  	result.push_back(sum);
+// 	// std::cout << "sum: " << sum.transpose() << ", Nsum: " << Nsum << ", Div: " << average.transpose() << std::endl;
 //       }
-//     }
 //   }
+
+//   pointsBB.assign(result.begin(), result.end());
+
+//   // std::cout << "Result: ";
+//   // for (int i=0; i<result.size(); i++){ std::cout << "  (" << result[i].transpose() << ")  ";  }
+//   // std::cout << std::endl;
+
 // }
+
+
+
+void CollisionTwoBoxes::
+averageSimilarValues( void )
+{
+  double dist;
+  for (int i=0; i<pointsBB.size(); i++){
+    for (int j=i+1; j<pointsBB.size(); j++){
+      dist = (pointsBB[i](0)-pointsBB[j](0))*(pointsBB[i](0)-pointsBB[j](0)) +
+	     (pointsBB[i](1)-pointsBB[j](1))*(pointsBB[i](1)-pointsBB[j](1)) +
+             (pointsBB[i](2)-pointsBB[j](2))*(pointsBB[i](2)-pointsBB[j](2));
+
+      if ( dist < (tolerance*tolerance) ) {
+	pointsBB[i](0) = (pointsBB[i](0)+pointsBB[j](0))/2;
+	pointsBB[i](1) = (pointsBB[i](1)+pointsBB[j](1))/2;
+	pointsBB[i](2) = (pointsBB[i](2)+pointsBB[j](2))/2;
+	pointsBB.erase( pointsBB.begin()+j );
+	j--;
+      }
+    }
+  }
+}
 
 
 /* ----------------- PRINT INFORMATION --------------------- */

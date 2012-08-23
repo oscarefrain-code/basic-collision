@@ -55,14 +55,14 @@ class Box
   void setLength(const double lx, const double ly, const double lz)
     {
       Lx=lx; Ly=ly; Lz=lz;
-      vo1 <<  Lx/2, -Ly/2,  Lz/2;
-      vo2 << -Lx/2, -Ly/2,  Lz/2;
-      vo3 << -Lx/2, -Ly/2, -Lz/2;
-      vo4 <<  Lx/2, -Ly/2, -Lz/2;
-      vo5 <<  Lx/2,  Ly/2,  Lz/2;
-      vo6 << -Lx/2,  Ly/2,  Lz/2;
-      vo7 << -Lx/2,  Ly/2, -Lz/2;
-      vo8 <<  Lx/2,  Ly/2, -Lz/2;
+      vo1 <<  Lx/2,  Ly/2,  Lz/2;
+      vo2 << -Lx/2,  Ly/2,  Lz/2;
+      vo3 << -Lx/2,  Ly/2, -Lz/2;
+      vo4 <<  Lx/2,  Ly/2, -Lz/2;
+      vo5 <<  Lx/2, -Ly/2,  Lz/2;
+      vo6 << -Lx/2, -Ly/2,  Lz/2;
+      vo7 << -Lx/2, -Ly/2, -Lz/2;
+      vo8 <<  Lx/2, -Ly/2, -Lz/2;
       setTransformation(R,T);
     }
 
