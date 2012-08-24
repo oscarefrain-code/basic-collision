@@ -57,6 +57,7 @@ public OperationsHelper
   void printLengths( void );
   void printBoxesVertices( void );
   void printBBsCollisionInformation( void );
+  void printTransformation( void );
 
   /* -- Collision Points -- */
   std::vector<Eigen::Vector3d> pointsBBs;

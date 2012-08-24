@@ -545,6 +545,9 @@ coplanar_tri_tri(Vector3d N)
    collision[8] = point_in_tri(T2.v3, T1.v1, T1.v2, T1.v3);
    
    return (collision[0] || collision[1] || collision[2] || collision[3] || collision[6]);
+   // return (collision[0] || collision[1] || collision[2] || collision[3] || collision[4] || 
+   // 	   collision[5] || collision[6] || collision[7] || collision[8]);
+
 }
 
 

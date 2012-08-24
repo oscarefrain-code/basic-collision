@@ -187,3 +187,10 @@ printBoxesVertices( void )
 
 }
 
+void CollisionOneManyBoxes::
+printTransformation( void )
+{
+  for (int i=0; i<collisionBoxes.size(); i++){
+    collisionBoxes[i].printTransformation();
+  }
+}

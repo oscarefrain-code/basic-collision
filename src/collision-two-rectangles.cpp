@@ -187,10 +187,10 @@ computeRRintersections( void )
   // scene3.printTTcollisionInformation();
   // collisionIndicator = collisionTT[2];
 
-  // std::cout << "Collisions : ";
-  // for (int i=0; i<4; i++)
-  //   std::cout << collisionTT[i] << " ";
-  // std::cout << std::endl;
+  std::cout << "Collisions (triangles): ";
+  for (int i=0; i<4; i++)
+    std::cout << collisionTT[i] << " ";
+  std::cout << std::endl;
 
   // for (int i=0; i<scene1.pointsTT.size(); i++)
   //   std::cout << "  (" << scene1.pointsTT[i].transpose() << ")  " << std::endl;
