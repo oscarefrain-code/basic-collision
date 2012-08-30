@@ -41,7 +41,8 @@
 #define tolerance_collinear 0.001
 
 // Tolerance for the collinear distance (when the vectors are collinear)
-#define tolerance_distance_collinear 0.00001
+//#define tolerance_distance_collinear 0.00001
+#define tolerance_distance_collinear 0.0005
 
 /* Tolerance distance to prune the points (if the distance is smaller than this, then, ignore one
    of the points */

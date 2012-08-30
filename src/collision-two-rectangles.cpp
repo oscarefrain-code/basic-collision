@@ -160,6 +160,10 @@ computeRRintersections( void )
 {
   int collisionTT[4];
 
+  /* Initialization to zero of collisions indicators */
+  for (int i=0; i<4; i++)
+    collisionTT[i]=0;
+
   /* Get the vertices */
   Vector3d R1v1, R1v2, R1v3, R1v4, R2v1, R2v2, R2v3, R2v4;
   R1.getVertices(R1v1, R1v2, R1v3, R1v4);
@@ -174,6 +178,7 @@ computeRRintersections( void )
   scene3.setVerticesAll(R1v3, R1v4, R1v1, R2v1, R2v2, R2v3);
   scene4.setVerticesAll(R1v3, R1v4, R1v1, R2v3, R2v4, R2v1);
 
+  //scene1.printTrianglesVertices();
   collisionTT[0] = scene1.computeTTintersections();
   collisionTT[1] = scene2.computeTTintersections();
   collisionTT[2] = scene3.computeTTintersections();
@@ -183,14 +188,13 @@ computeRRintersections( void )
                        collisionTT[2] || collisionTT[3];
 
   // std::cout << std::endl;
-  // scene3.printTrianglesVertices();
-  // scene3.printTTcollisionInformation();
-  // collisionIndicator = collisionTT[2];
+  // scene1.printTrianglesVertices();
+  // scene1.printTTcollisionInformation();
 
-  std::cout << "Collisions (triangles): ";
-  for (int i=0; i<4; i++)
-    std::cout << collisionTT[i] << " ";
-  std::cout << std::endl;
+  // std::cout << "Collisions (triangle/triangle level):\n      ";
+  // for (int i=0; i<4; i++)
+  //   std::cout << collisionTT[i] << " ";
+  // std::cout << std::endl;
 
   // for (int i=0; i<scene1.pointsTT.size(); i++)
   //   std::cout << "  (" << scene1.pointsTT[i].transpose() << ")  " << std::endl;
@@ -214,6 +218,7 @@ computeRRintersections( void )
       pointsRR.push_back(scene4.pointsTT[i]);
   }
 
+  // printRRcollisionInformation();
   prunePoints(pointsRR);
   convexHull(pointsRR);
 
@@ -230,6 +235,7 @@ printRRcollisionInformation( void )
     for (int i=0; i<pointsRR.size(); i++){
       std::cout << "  [" << pointsRR[i].transpose() << "]  ";
     }
+    std::cout << std::endl;
   }
   else{
     std::cout << "Result: Rectangles are NOT intersecting" << std::endl;

@@ -68,8 +68,11 @@ class Triangle
   void print()
   {
     /* Print as: V1=[x y z], V2=[x y z], V3=[x y z] */
-    std::cout << "V1=["<< v1.transpose() << "]; V2=[" << v2.transpose()
-	      << "]; V3=[" << v3.transpose() << "]; " << std::endl;
+    /* std::cout << "V1=["<< v1.transpose() << "]; V2=[" << v2.transpose() */
+    /* 	      << "]; V3=[" << v3.transpose() << "]; " << std::endl; */
+    std::cout << "V1=[" << v1(0) << ", " << v1(1) << ", " << v1(2) << "]; "
+	      << "V2=[" << v2(0) << ", " << v2(1) << ", " << v2(2) << "]; "
+	      << "V3=[" << v3(0) << ", " << v3(1) << ", " << v3(2) << "]; " << std::endl;
   }
 };
 
@@ -110,6 +113,7 @@ class CollisionTwoTriangles
 
   /* -- Print additional information -- */
   void printTTcollisionInformation( void );
+
   void printTrianglesVertices( void );
 
   /* -- Vector to store the collision points -- */
@@ -142,6 +146,9 @@ class CollisionTwoTriangles
   void isect2(Eigen::Vector3d VTX0, Eigen::Vector3d VTX1, Eigen::Vector3d VTX2, 
 	      double VV1, double VV2, double VV3, double D0,double D1,double D2,
 	      Eigen::Vector2d &isect, Eigen::Vector3d &isectpoint0, Eigen::Vector3d &isectpoint1); 
+
+  double distPoint2Segment( const Eigen::Vector3d & P, const Eigen::Vector3d & P1, const Eigen::Vector3d & P2);
+  double euclideanDistance(const Eigen::Vector3d & P1, const Eigen::Vector3d & P2);
 
   
 };

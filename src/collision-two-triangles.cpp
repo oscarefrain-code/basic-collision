@@ -172,15 +172,12 @@ computeTTintersections( void )
 {
   Vector2d isect1, isect2;
   double d1, d2;
-  Vector3d distT2, distT1;    // distances from the vertices to the plane of the other triangle
+  Vector3d distT2toP1, distT1toP2;    // distances from the vertices to the plane of the other triangle
   Vector3d N1, N2;            // Normals
   
   double du0du1, du0du2, dv0dv1, dv0dv2;
   Vector3d projT1, projT2;
   int index;
-
-  // std::cout << "Vertices: " << T1.v1.transpose() << " --- " << T1.v2.transpose() << " --- " << T1.v3.transpose() << std::endl;
-  // std::cout << "Vertices: " << T2.v1.transpose() << " --- " << T2.v2.transpose() << " --- " << T2.v3.transpose() << std::endl;
 
   /* Clear the possible 'previous' contact points */
   pointsTT.clear();
@@ -192,22 +189,23 @@ computeTTintersections( void )
   d1 = -N1.dot(T1.v1);   
 
   /* Put the vertices of T2 into the plane of T1 to compute the signed distances to the plane of T1
-     distT2: distance from the vertices of T2 to the plane of T1 */
-  distT2(0) = N1.dot(T2.v1) + d1;
-  distT2(1) = N1.dot(T2.v2) + d1;
-  distT2(2) = N1.dot(T2.v3) + d1;
+     distT2toP1: distance from the vertices of T2 to the plane of T1 */
+  distT2toP1(0) = N1.dot(T2.v1) + d1;
+  distT2toP1(1) = N1.dot(T2.v2) + d1;
+  distT2toP1(2) = N1.dot(T2.v3) + d1;
 
   // std::cout << "- N1: " << N1.transpose() << " ... norm: " << N1.norm() << std::endl;//" normalized:\n" << N1/N1.norm()<< std::endl;
-  // //std::cout << "distT2: " << distT2.transpose() << std::endl;
+  // //std::cout << "distT2toP1: " << distT2toP1.transpose() << std::endl;
 
   /* Coplanarity robustness check
      If the distance is smaller than coplanar_tolerance, the vertex is assumed to be in the plane */
-  if( fabs(distT2(0) ) < coplanar_tolerance ) distT2(0) = 0.0;
-  if( fabs(distT2(1) ) < coplanar_tolerance ) distT2(1) = 0.0;
-  if( fabs(distT2(2) ) < coplanar_tolerance ) distT2(2) = 0.0;
-  du0du1 = distT2(0)*distT2(1); du0du2 = distT2(0)*distT2(2);          // To get the sign
+  if( fabs(distT2toP1(0) ) < coplanar_tolerance ) distT2toP1(0) = 0.0;
+  if( fabs(distT2toP1(1) ) < coplanar_tolerance ) distT2toP1(1) = 0.0;
+  if( fabs(distT2toP1(2) ) < coplanar_tolerance ) distT2toP1(2) = 0.0;
+  du0du1 = distT2toP1(0)*distT2toP1(1); du0du2 = distT2toP1(0)*distT2toP1(2);          // To get the sign
 
-  // std::cout << "  distT2 (to plane of T1): " << distT2.transpose() ;
+
+  // std::cout << "  distT2toP1 (to plane of T1): " << distT2toP1.transpose() ;
   // std::cout << " ... Signs (d0d1,d0d2): " << du0du1 << ", " << du0du2 << std::endl;
 
   /* If the distances of all the vertices of T2 to the plane of T1 have the same sign,
@@ -226,21 +224,21 @@ computeTTintersections( void )
 
   /* put V1,V2,V3 into plane equation 2 */
   /* Put the vertices of T1 into the plane of T2 to compute the signed distances to the plane of T2
-     distT1: signed distance from the vertices of T1 to the plane of T2 */
-  distT1(0) = N2.dot(T1.v1) + d2;
-  distT1(1) = N2.dot(T1.v2) + d2;
-  distT1(2) = N2.dot(T1.v3) + d2;
+     distT1toP2: signed distance from the vertices of T1 to the plane of T2 */
+  distT1toP2(0) = N2.dot(T1.v1) + d2;
+  distT1toP2(1) = N2.dot(T1.v2) + d2;
+  distT1toP2(2) = N2.dot(T1.v3) + d2;
 
   // std::cout << "- N2: " << N2.transpose() << std::endl;
-  //std::cout << "distT1: " << distT1.transpose() << std::endl;
+  // // std::cout << "distT1toP2: " << distT1toP2.transpose() << std::endl;
 
   /* Coplanarity robustness check */
-  if( fabs(distT1(0) ) < coplanar_tolerance) distT1(0) = 0.0;
-  if( fabs(distT1(1) ) < coplanar_tolerance) distT1(1) = 0.0;
-  if( fabs(distT1(2) ) < coplanar_tolerance) distT1(2) = 0.0;
-  dv0dv1 = distT1(0)*distT1(1); dv0dv2 = distT1(0)*distT1(2);
+  if( fabs(distT1toP2(0) ) < coplanar_tolerance) distT1toP2(0) = 0.0;
+  if( fabs(distT1toP2(1) ) < coplanar_tolerance) distT1toP2(1) = 0.0;
+  if( fabs(distT1toP2(2) ) < coplanar_tolerance) distT1toP2(2) = 0.0;
+  dv0dv1 = distT1toP2(0)*distT1toP2(1); dv0dv2 = distT1toP2(0)*distT1toP2(2);
 
-  // std::cout << "  distT1 (to plane of T2): " << distT1.transpose();
+  // std::cout << "  distT1toP2 (to plane of T2): " << distT1toP2.transpose();
   // std::cout << " ... Signs (dv0dv1,dv0dv2): " << dv0dv1 << ",  " << dv0dv2 << std::endl;
  
   /* If the distances of all the vertices of T1 to the plane of T2 have the same sign,
@@ -274,72 +272,118 @@ computeTTintersections( void )
   Vector3d isectpt1, isectpt2;
   int smallest1,smallest2, coplanar;
   bool coplanarCollision;
-  
-  /* compute interval for triangle 1 */
-  // std::cout << "... Computing for T1\n";
-  coplanar = compute_intervals_isectline(1, projT1, distT1, dv0dv1, dv0dv2,
-  					 isect1, p1T1inPlane2, p2T1inPlane2);
 
-  /* Coplanar Planes? */
-  if(coplanar){
-    // std::cout << "\n -- Triangles are coplanar -- " << std::endl;
-    coplanarCollision = coplanar_tri_tri(N1);
-    //std::cout << "Coplanar Collision: " << coplanarCollision << std::endl;
-    if (coplanarCollision)
+  bool get_out=0;
+
+  for(;;) {
+
+    /* compute interval for triangle 1 */
+    // std::cout << "... Computing for T1\n";
+    coplanar = compute_intervals_isectline(1, projT1, distT1toP2, dv0dv1, dv0dv2,
+					   isect1, p1T1inPlane2, p2T1inPlane2);
+
+    /* Coplanar Planes? */
+    if(coplanar){
+      // std::cout << "\n -- Triangles are coplanar -- " << std::endl;
+      coplanarCollision = coplanar_tri_tri(N1);
+      // std::cout << "Coplanar Collision: " << coplanarCollision << std::endl;
+      if (coplanarCollision)
+	{
+	  //printTTcollisionInformation( );
+	  prunePoints(pointsTT);             	// To remove repeated elements
+	  collisionIndicator = 1;
+	  return 1;
+	}
+      collisionIndicator = 0;
+      return 0;
+    }
+
+    /* compute interval for triangle 2 */
+    // std::cout << "... Computing for T2\n";
+    compute_intervals_isectline(2, projT2, distT2toP1, du0du1, du0du2,
+				isect2, p1T2inPlane1, p2T2inPlane1);
+    
+    sort2(isect1, smallest1);
+    sort2(isect2, smallest2);
+    
+    // std::cout << "Values (sorted) for isect1: " << isect1.transpose() << ", isect2: " << isect2.transpose() << std::endl;
+    // std::cout << "  - Inters of T1: " << p1T1inPlane2.transpose() << ", " << p2T1inPlane2.transpose() << std::endl;
+    // std::cout << "  - Inters of T2: " << p1T2inPlane1.transpose() << ", " << p2T2inPlane1.transpose() << std::endl;
+    
+    if(isect1(1)<isect2(0) || isect2(1)<isect1(0)) {
+      collisionIndicator = 0;
+      return 0;
+    }
+    
+    /* ====================================================================================================
+       ADDED TO CHECK IF THE INTERSECTION POINTS INTERSECT (THIS VERIFICATION MIGHT NOT BE NECESSARY, 
+       CHECK IT LATER, JUST ADDED TO AVOID DETECTING FALSE CONTACT POINTS)
+    */
+    
+    double num, den, r1, r2, minEps=1e-15;
+    Vector3d P1L1 = p1T1inPlane2, P2L1 = p2T1inPlane2; // Names just to make expression simpler
+    Vector3d P1L2 = p1T2inPlane1, P2L2 = p2T2inPlane1;
+    num = (P1L2(0)-P1L1(0))*(P2L2(1)-P1L2(1)) + (P1L1(1)-P1L2(1))*(P2L2(0)-P1L2(0));
+    den = (P2L1(0)-P1L1(0))*(P2L2(1)-P1L2(1)) - (P2L1(1)-P1L1(1))*(P2L2(0)-P1L2(0));
+    // std::cout << " r1=num/den, where num: " << num << ", den: " << den << std::endl;
+    // std::cout << " diff" << (P1L1(0)-P2L1(0)) << " ---- " << P1L1(1)-P2L1(1) << " ---- " << P1L1(2)-P2L1(2) << std::endl;
+    
+    /* Execute the test if the lines are not collinear (if they are collinear, den=0 */
+    if (fabs(den) > minEps)
       {
-  	//printTTcollisionInformation( );
-  	prunePoints(pointsTT);             	// To remove repeated elements
-  	collisionIndicator = 1;
-  	return 1;
+	// std::cout << "Lines are not collinear\n";
+	distT2toP1(0) = 0.0;  distT2toP1(1) = 0.0;  distT2toP1(2) = 0.0;
+	du0du1 = 0; du0du2 = 0;          // To get the sign
+	
+	distT1toP2(0) = 0.0;  distT1toP2(1) = 0.0;  distT1toP2(2) = 0.0;
+	dv0dv1 = 0; dv0dv2 = 0;
+
+	get_out=0;
+
+      // r1 = num/den;
+      // if      (P2L2(0)-P1L2(0)) r2 = ( (P1L1(0)-P1L2(0))+r1*(P2L1(0)-P1L1(0)) ) / (P2L2(0)-P1L2(0));
+      // else if (P2L2(1)-P1L2(1)) r2 = ( (P1L1(1)-P1L2(1))+r1*(P2L1(1)-P1L1(1)) ) / (P2L2(1)-P1L2(1));
+      // else                      r2 = ( (P1L1(2)-P1L2(2))+r1*(P2L1(2)-P1L1(2)) ) / (P2L2(2)-P1L2(2));
+
+      // // std::cout << "Line 1: " << P1L1 << " + " << P2L1-P1L1 << " t    ...   r1: " << r1 << std::endl;
+      // // std::cout << "Line 2: " << P1L2 << " + " << P2L2-P1L2 << " t    ...   r2: " << r2 << std::endl;
+      // // std::cout << "Int 1: " << P1L1+r1*(P2L1-P1L1) << std::endl;
+      // // std::cout << "Int 2: " << P1L2+r2*(P2L2-P1L2) << std::endl;
+      
+      // if (r1<=0 || r1>=1 || r2<=0 || r2>=1){
+      // 	collisionIndicator = 0;
+      // 	return 0;
+      // }
+      
       }
-    collisionIndicator = 0;
-    return 0;
-  }
-
-  /* compute interval for triangle 2 */
-  // std::cout << "... Computing for T2\n";
-  compute_intervals_isectline(2, projT2, distT2, du0du1, du0du2,
-  			      isect2, p1T2inPlane1, p2T2inPlane1);
-
-  sort2(isect1, smallest1);
-  sort2(isect2, smallest2);
-
-  // std::cout << "Values (sorted) for isect1: " << isect1.transpose() << ", isect2: " << isect2.transpose() << std::endl;
-  // std::cout << "  - Inters of T1: " << p1T1inPlane2.transpose() << ", " << p2T1inPlane2.transpose() << std::endl;
-  // std::cout << "  - Inters of T2: " << p1T2inPlane1.transpose() << ", " << p2T2inPlane1.transpose() << std::endl;
- 
-  if(isect1(1)<isect2(0) || isect2(1)<isect1(0)) {
-    collisionIndicator = 0;
-    return 0;
-  }
-
-  /* ====================================================================================================
-     ADDED TO CHECK IF THE INTERSECTION POINTS INTERSECT (THIS VERIFICATION MIGHT NOT BE NECESSARY, 
-     CHECK IT LATER, JUST ADDED TO AVOID DETECTING FALSE CONTACT POINTS)
-  */
-
-  double num, den, r1, r2, minEps=1e-15;
-  Vector3d P1L1 = p1T1inPlane2, P2L1 = p2T1inPlane2; // Names just to make expression simpler
-  Vector3d P1L2 = p1T2inPlane1, P2L2 = p2T2inPlane1;
-  num = (P1L2(0)-P1L1(0))*(P2L2(1)-P1L2(1)) + (P1L1(1)-P1L2(1))*(P2L2(0)-P1L2(0));
-  den = (P2L1(0)-P1L1(0))*(P2L2(1)-P1L2(1)) - (P2L1(1)-P1L1(1))*(P2L2(0)-P1L2(0));
-  if (fabs(den) > minEps)
-    {
-      r1 = num/den;
-      if      (P2L2(0)-P1L2(0)) r2 = ( (P1L1(0)-P1L2(0))+r1*(P2L1(0)-P1L1(0)) ) / (P2L2(0)-P1L2(0));
-      else if (P2L2(1)-P1L2(1)) r2 = ( (P1L1(1)-P1L2(1))+r1*(P2L1(1)-P1L1(1)) ) / (P2L2(1)-P1L2(1));
-      else                      r2 = ( (P1L1(2)-P1L2(2))+r1*(P2L1(2)-P1L1(2)) ) / (P2L2(2)-P1L2(2));
-      
-      // std::cout << "r1: " << r1 << std::endl;
-      // std::cout << "r2: " << r2 << std::endl;
-      // std::cout << "Int 1: " << P1L1+r1*(P2L1-P1L1) << std::endl;
-      // std::cout << "Int 2: " << P1L2+r2*(P2L2-P1L2) << std::endl;
-      
-      if (r1<=0 || r1>=1 || r2<=0 || r2>=1){
+    /* If a pair of points in a line is actually the same point */
+    else if( (P1L1(0)-P2L1(0)<minEps) && (P1L1(1)-P2L1(1)<minEps) && (P1L1(2)-P2L1(2)<minEps) )  {
+      /* P1L1 = P2L1, if it is not in the line, no collision */
+      get_out = 1;
+      if (distPoint2Segment(P1L1, P1L2, P2L2) > coplanar_tolerance){
 	collisionIndicator = 0;
+	get_out = 1;
 	return 0;
       }
     }
+    
+    else if( (P1L2(0)-P2L2(0)<minEps) && (P1L2(1)-P2L2(1)<minEps) && (P1L2(2)-P2L2(2)<minEps) )  {
+      /* P1L2 = P2L2, if it is not in the line, no collision */
+      get_out = 1;
+      if (distPoint2Segment(P1L2, P1L1, P2L1) > coplanar_tolerance){
+	collisionIndicator = 0;
+	get_out=1;
+	return 0;
+      }
+    }
+    else    {
+      get_out=1;
+    }
+    
+    if(get_out==1)
+      break;
+    
+  }
     
   /*  ====================================================================================================
    */
@@ -659,6 +703,35 @@ point_in_tri(Vector3d v0, Vector3d u0, Vector3d u1, Vector3d u2)
   return (false);
 }
 
+
+// distPoint2Segment(): get the distance of a point to a segment.
+//    Input:  a Point P and a Segment specified by P1 and P2
+//    Return: the shortest distance from P to S
+double CollisionTwoTriangles::
+distPoint2Segment( const Vector3d & P, const Vector3d & P1, const Vector3d & P2)
+{
+  Vector3d v1 = P2 - P1;
+  Vector3d v2 = P  - P1;
+
+  double c1 = v1.dot(v2);
+  if ( c1 <= 0 )
+    return euclideanDistance(P, P1);
+  
+  double c2 = v1.dot(v1);
+  if ( c2 <= c1 )
+    return euclideanDistance(P, P2);
+  
+  double b = c1 / c2;
+  Vector3d Ps = P1 + b*v1;
+  return euclideanDistance(P, Ps);
+}
+
+double CollisionTwoTriangles::
+euclideanDistance(const Vector3d & P1, const Vector3d & P2)
+{
+  Vector3d distVector=P1-P2;
+  return (distVector.norm());
+}
 
 /* --- Print vertices of the triangles --- */
 void CollisionTwoTriangles::

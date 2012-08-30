@@ -93,10 +93,20 @@ class Box
   /* -- Print on screen -- */
   void printVertices()
   {
-    std::cout << "V1=["<< v1.transpose() << "], V2=[" << v2.transpose() << "], V3=[" << v3.transpose()
-	      << "], V4=[" << v4.transpose() << "], V5=[" << v5.transpose() << "], V6=[" << v6.transpose()
-      	      << "], V7=[" << v7.transpose() << "], V8=[" << v8.transpose() << "]" << std::endl;
+    /* std::cout << "V1=["<< v1.transpose() << "], V2=[" << v2.transpose() << "], V3=[" << v3.transpose() */
+    /* 	      << "], V4=[" << v4.transpose() << "], V5=[" << v5.transpose() << "], V6=[" << v6.transpose() */
+    /*   	      << "], V7=[" << v7.transpose() << "], V8=[" << v8.transpose() << "]" << std::endl; */
+    std::cout << "V1="; printV(v1);
+    std::cout << "; V2="; printV(v2);
+    std::cout << "; V3="; printV(v3);
+    std::cout << "; V4="; printV(v4);
+    std::cout << "; V5="; printV(v5);
+    std::cout << "; V6="; printV(v6);
+    std::cout << "; V7="; printV(v7);
+    std::cout << "; V8="; printV(v8);
+    std::cout << std::endl;
   }
+
   void printLengths()
   {
     std::cout << "(Lx, Ly, Lz) = (" << Lx << ", " << Ly << ", " << Lz << ")" << std::endl;
@@ -126,6 +136,11 @@ class Box
     pout(1) = R(1,0)*pin(0) + R(1,1)*pin(1) + R(1,2)*pin(2) + T(1);
     pout(2) = R(2,0)*pin(0) + R(2,1)*pin(1) + R(2,2)*pin(2) + T(2);
     return pout;
+  }
+
+  void printV(const Eigen::Vector3d & v)
+  {
+    std::cout << "[ " << v(0) << ", " << v(1) << ", " << v(2) << " ]";
   }
 
 };
@@ -171,6 +186,8 @@ class CollisionTwoBoxes
   /* --- Print Different Information --- */
   void printLengths( void );
   void printBoxesVertices( void );
+  void printBox1Vertices( void );
+  void printBox2Vertices( void );
   void printBBcollisionInformation( void );
   void printTransformation( void );
 
@@ -197,6 +214,9 @@ class CollisionTwoBoxes
   /* -- To initialize some values to zero -- */
   void defaultInit( void );
 
+  /* -- Some functions used in debugging process -- */
+  void debugPrintCollisionRectangles(int collisions[36]);
+  
 };
 
 #endif
