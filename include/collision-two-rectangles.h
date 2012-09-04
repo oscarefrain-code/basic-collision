@@ -57,12 +57,25 @@ class Rectangle
   void print()
   {
     /* Print as: V1=[x y z], V2=[x y z], V3=[x y z], V4=[x y z] */
-    std::cout << "V1=["<< v1.transpose() << "], V2=[" << v2.transpose() << "], V3=["
-	      << v3.transpose() << "], V4=[" << v4.transpose() << "]" << std::endl;
+    /* std::cout << "V1=["<< v1.transpose() << "], V2=[" << v2.transpose() << "], V3=[" */
+    /* 	      << v3.transpose() << "], V4=[" << v4.transpose() << "]" << std::endl; */
+
+    /* Print as: V1=[x,y,z]; V2=[x,y,z]; V3=[x,y,z]; V4=[x,y,z]; */
+    std::cout << "V1="; printV(v1);
+    std::cout << "; V2="; printV(v2);
+    std::cout << "; V3="; printV(v3);
+    std::cout << "; V4="; printV(v4);
+    std::cout << ";" << std::endl;
   }
  private:
   /* -- Vertices -- */
   Eigen::Vector3d v1, v2, v3, v4;   
+
+  void printV(const Eigen::Vector3d & v)
+  {
+    std::cout << "[ " << v(0) << ", " << v(1) << ", " << v(2) << " ]";
+  }
+
 };
 
 

@@ -146,8 +146,8 @@ printBBsCollisionInformation( void )
     std::cout << "Result: Boxes are intersecting at" << std::endl << "  ";
     for (int i=0; i<pointsBBs.size(); i++){
       //std::cout << "  (" << pointsBBs[i].transpose() << ")  ";
-      std::cout << "[" << pointsBBs[i](0) << ", " << pointsBBs[i](1) << ", "
-		<< pointsBBs[i](2) << "]; ";
+      std::cout << "P" << i+1 << "=" << "[" << pointsBBs[i](0) << ", "
+		<< pointsBBs[i](1) << ", " << pointsBBs[i](2) << "]; ";
     }
     std::cout << std::endl;
   }

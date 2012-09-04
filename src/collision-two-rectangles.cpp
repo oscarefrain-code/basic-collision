@@ -179,10 +179,10 @@ computeRRintersections( void )
   scene4.setVerticesAll(R1v3, R1v4, R1v1, R2v3, R2v4, R2v1);
 
   //scene1.printTrianglesVertices();
-  collisionTT[0] = scene1.computeTTintersections();
-  collisionTT[1] = scene2.computeTTintersections();
-  collisionTT[2] = scene3.computeTTintersections();
-  collisionTT[3] = scene4.computeTTintersections();
+  collisionTT[0] = scene1.computeTTintersections();    // R1T1 - R2R1
+  collisionTT[1] = scene2.computeTTintersections();    // R1T1 - R2T2
+  collisionTT[2] = scene3.computeTTintersections();    // R1T2 - R2T1
+  collisionTT[3] = scene4.computeTTintersections();    // R1T2 - R2T2
 
   collisionIndicator = collisionTT[0] || collisionTT[1] ||
                        collisionTT[2] || collisionTT[3];
@@ -190,6 +190,17 @@ computeRRintersections( void )
   // std::cout << std::endl;
   // scene1.printTrianglesVertices();
   // scene1.printTTcollisionInformation();
+  // std::cout << std::endl;
+  // scene2.printTrianglesVertices();
+  // scene2.printTTcollisionInformation();
+  // std::cout << std::endl;
+  // scene3.printTrianglesVertices();
+  // scene3.printTTcollisionInformation();
+  // std::cout << std::endl;
+  // scene4.printTrianglesVertices();
+  // scene4.printTTcollisionInformation();
+
+  // printRectanglesVertices();
 
   // std::cout << "Collisions (triangle/triangle level):\n      ";
   // for (int i=0; i<4; i++)
@@ -219,8 +230,11 @@ computeRRintersections( void )
   }
 
   // printRRcollisionInformation();
+
   prunePoints(pointsRR);
   convexHull(pointsRR);
+
+  // printRRcollisionInformation();
 
   return collisionIndicator;
 }
@@ -233,7 +247,9 @@ printRRcollisionInformation( void )
   if (collisionIndicator) {
     std::cout << "Result: Rectangles are intersecting at" << std::endl;
     for (int i=0; i<pointsRR.size(); i++){
-      std::cout << "  [" << pointsRR[i].transpose() << "]  ";
+      //std::cout << "  [" << pointsRR[i].transpose() << "]  ";
+      std::cout << "  P" << i+1 << "=[" << pointsRR[i](0) << ", " << pointsRR[i](1) << ", "
+		<< pointsRR[i](2) << "];";
     }
     std::cout << std::endl;
   }

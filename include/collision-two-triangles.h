@@ -142,10 +142,12 @@ class CollisionTwoTriangles
   bool point_in_tri(Eigen::Vector3d v0, Eigen::Vector3d u0, Eigen::Vector3d u1, Eigen::Vector3d u2);
   int compute_intervals_isectline(int id, Eigen::Vector3d VV, Eigen::Vector3d DD,
 				  double D0D1, double D0D2, Eigen::Vector2d &isect,
-				  Eigen::Vector3d &isectpoint0, Eigen::Vector3d &isectpoint1);
+				  Eigen::Vector3d &isectpoint0, Eigen::Vector3d &isectpoint1,
+				  const Eigen::Vector3d & Normal, double d);
   void isect2(Eigen::Vector3d VTX0, Eigen::Vector3d VTX1, Eigen::Vector3d VTX2, 
 	      double VV1, double VV2, double VV3, double D0,double D1,double D2,
-	      Eigen::Vector2d &isect, Eigen::Vector3d &isectpoint0, Eigen::Vector3d &isectpoint1); 
+	      Eigen::Vector2d &isect, Eigen::Vector3d &isectpoint0, Eigen::Vector3d &isectpoint1, 
+	      Eigen::Vector3d Normal, double d); 
 
   double distPoint2Segment( const Eigen::Vector3d & P, const Eigen::Vector3d & P1, const Eigen::Vector3d & P2);
   double euclideanDistance(const Eigen::Vector3d & P1, const Eigen::Vector3d & P2);

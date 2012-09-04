@@ -104,7 +104,7 @@ class Box
     std::cout << "; V6="; printV(v6);
     std::cout << "; V7="; printV(v7);
     std::cout << "; V8="; printV(v8);
-    std::cout << std::endl;
+    std::cout << ";" << std::endl;
   }
 
   void printLengths()
